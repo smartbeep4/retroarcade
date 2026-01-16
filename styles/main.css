@@ -1,0 +1,99 @@
+:root {
+  /* Background */
+  --bg-dark: #0a0a0f;
+  --bg-cabinet: #1a1a2e;
+
+  /* Neon accents */
+  --neon-pink: #ff2a6d;
+  --neon-cyan: #05d9e8;
+  --neon-yellow: #f9f871;
+  --neon-green: #39ff14;
+  --neon-purple: #9d4edd;
+  --neon-orange: #ff6b35;
+
+  /* UI */
+  --text-primary: #ffffff;
+  --text-secondary: #7f8c8d;
+  --text-dim: #4a4a5a;
+
+  /* Effects */
+  --glow-cyan: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+  --glow-pink: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-dark);
+  font-family: "Press Start 2P", monospace;
+  color: var(--text-primary);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#arcade-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 4 / 3;
+  background: var(--bg-cabinet);
+  border: 4px solid var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+  overflow: hidden;
+}
+
+#game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Pixel-perfect text sizes */
+.text-xs {
+  font-size: 8px;
+}
+.text-sm {
+  font-size: 12px;
+}
+.text-md {
+  font-size: 16px;
+}
+.text-lg {
+  font-size: 24px;
+}
+.text-xl {
+  font-size: 32px;
+}
+
+/* Utility classes */
+.neon-text-cyan {
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+}
+.neon-text-pink {
+  color: var(--neon-pink);
+  text-shadow: var(--glow-pink);
+}
+.hidden {
+  display: none !important;
+}

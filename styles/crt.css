@@ -1,0 +1,273 @@
+/* CRT Effect Styles */
+
+:root {
+  --scanline-intensity: 0.5;
+  --bloom-intensity: 0.2;
+  --vignette-intensity: 0.4;
+  --chromatic-intensity: 0.1;
+  --curvature-intensity: 0.3;
+}
+
+/* Container when CRT is enabled */
+.crt-enabled {
+  position: relative;
+  border-radius: calc(var(--curvature-intensity) * 30px);
+  overflow: hidden;
+}
+
+/* Scanlines - horizontal lines simulating CRT phosphor gaps */
+.crt-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: var(--scanline-intensity);
+  z-index: 10;
+}
+
+/* Vignette - darker corners simulating uneven CRT brightness */
+.crt-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, calc(var(--vignette-intensity) * 0.8)) 100%
+  );
+  z-index: 11;
+}
+
+/* Bloom overlay - glow effect on bright colors */
+.crt-bloom-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: blur(4px);
+  mix-blend-mode: screen;
+  opacity: var(--bloom-intensity);
+  z-index: 9;
+  background: inherit;
+}
+
+/* Flicker animation - subtle brightness variation */
+@keyframes crt-flicker {
+  0%,
+  100% {
+    opacity: 0.98;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.crt-flicker {
+  animation: crt-flicker 0.05s infinite;
+}
+
+/* Screen glow (outer edge) */
+.crt-enabled::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: inherit;
+  box-shadow:
+    0 0 30px rgba(5, 217, 232, 0.3),
+    0 0 60px rgba(5, 217, 232, 0.1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Chromatic aberration - RGB offset at edges */
+.crt-enabled::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 8;
+  opacity: calc(var(--chromatic-intensity) * 0.5);
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(255, 0, 0, 0.1) 80%,
+    rgba(0, 255, 255, 0.1) 100%
+  );
+}
+
+/* Optional: Reduce effects on mobile for performance */
+@media (max-width: 768px) {
+  .crt-scanlines {
+    opacity: calc(var(--scanline-intensity) * 0.5);
+  }
+
+  .crt-bloom-overlay {
+    filter: blur(2px);
+    opacity: calc(var(--bloom-intensity) * 0.5);
+  }
+
+  .crt-flicker {
+    animation: none;
+  }
+}
+
+/* Optional: Disable effects for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .crt-flicker {
+    animation: none;
+  }
+}
+
+/* Legacy support for old CRT overlay ID (if used elsewhere) */
+#crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.15;
+}
+
+/* Legacy scanlines animation */
+#crt-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(2px);
+  }
+}
+
+/* Legacy phosphor glow */
+#crt-overlay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(5, 217, 232, 0.05) 0%,
+    transparent 70%
+  );
+}
+
+/* Legacy screen curvature and vignette */
+#arcade-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 2%;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 99;
+}
+
+/* Legacy flicker effect */
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  2% {
+    opacity: 0.98;
+  }
+  4% {
+    opacity: 1;
+  }
+  8% {
+    opacity: 0.99;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#arcade-container {
+  animation: flicker 0.15s infinite;
+}
+
+/* Legacy RGB split effect */
+.crt-rgb-split #game-canvas {
+  text-shadow:
+    -1px 0 0 rgba(255, 0, 0, 0.3),
+    1px 0 0 rgba(0, 255, 255, 0.3);
+}
+
+/* Legacy bloom effect */
+.crt-bloom #game-canvas {
+  filter: blur(0.5px) brightness(1.1);
+}
+
+/* CRT toggle control button */
+.crt-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 5px 10px;
+  border: 1px solid var(--text-dim);
+  background: transparent;
+  cursor: pointer;
+  z-index: 101;
+  font-family: "Press Start 2P", monospace;
+  transition: all 0.2s ease;
+}
+
+.crt-toggle:hover {
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.crt-toggle.active {
+  color: var(--neon-pink);
+  border-color: var(--neon-pink);
+  box-shadow: var(--glow-pink);
+}
