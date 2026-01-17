@@ -53,16 +53,8 @@ const touchState = {
   position: null,
   swipeCallbacks: [],
   tapCallbacks: [],
-  lastTapPosition: null,
-  wasTapped: false,
-}
-
-// Mouse state
-const mouseState = {
-  position: null,
-  isDown: false,
-  wasClicked: false,
-  canvas: null,
+  // Direct touch input from TouchControls
+  directInput: {},
 }
 
 let swipeStart = null
@@ -374,8 +366,21 @@ function pollKeyboard() {
  * Poll touch state
  */
 function pollTouch() {
-  // Touch state is managed by event handlers
-  // and persists in state.current until cleared
+  // Apply direct touch input from TouchControls
+  for (const [key, value] of Object.entries(touchState.directInput)) {
+    if (value) {
+      state.current[key] = true
+    }
+  }
+}
+
+/**
+ * Set touch input directly (called by TouchControls)
+ * @param {string} key - Input key (up, down, left, right, action1, action2, pause)
+ * @param {boolean} pressed - Whether the input is pressed
+ */
+function _setTouchInput(key, pressed) {
+  touchState.directInput[key] = pressed
 }
 
 /**
@@ -626,6 +631,8 @@ export const InputManager = {
   isGamepadConnected,
   pollGamepad,
   destroy,
+  // Touch controls integration
+  _setTouchInput,
 }
 
 // Auto-initialize on import (can be disabled by calling destroy first)

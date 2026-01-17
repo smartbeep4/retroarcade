@@ -4,6 +4,7 @@ import { AudioManager } from './AudioManager.js'
 import { CRTEffect } from './CRTEffect.js'
 import { HighScoreManager } from './HighScoreManager.js'
 import GameLoader from './GameLoader.js'
+import { TouchControls } from './TouchControls.js'
 
 /**
  * NameEntry - Helper class for entering 3-letter high score names
@@ -678,6 +679,11 @@ export class ArcadeShell {
       CRTEffect.init(this.canvas.parentElement)
     }
 
+    // Initialize touch controls for mobile devices
+    if (this.canvas.parentElement) {
+      TouchControls.init(this.canvas.parentElement, this.input)
+    }
+
     HighScoreManager.init()
 
     this.isInitialized = true
@@ -754,6 +760,9 @@ export class ArcadeShell {
       // Set game instance in loader
       GameLoader.setCurrentGame(this.currentGame)
 
+      // Configure touch controls for this game
+      TouchControls.configureForGame(gameId)
+
       this.currentGame.onGameOver((score) => {
         this.handleGameOver(score)
       })
@@ -829,6 +838,8 @@ export class ArcadeShell {
       this.currentGame = null
       this.currentGameId = null
     }
+    // Hide touch controls when returning to menu
+    TouchControls.hide()
     GameLoader.unloadGame()
   }
 
