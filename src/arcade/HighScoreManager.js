@@ -34,9 +34,7 @@ function addScore(gameId, entry) {
   }
 
   // Normalize name
-  const name = (
-    entry.name !== undefined && entry.name !== null ? entry.name : 'AAA'
-  )
+  const name = (entry.name !== undefined && entry.name !== null ? entry.name : 'AAA')
     .toUpperCase()
     .slice(0, NAME_LENGTH)
     .padEnd(NAME_LENGTH, ' ')

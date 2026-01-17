@@ -19,14 +19,10 @@ class NameEntry {
   handleInput(action) {
     if (action === 'up') {
       const charCode = this.name[this.position].charCodeAt(0)
-      this.name[this.position] = String.fromCharCode(
-        charCode === 90 ? 65 : charCode + 1,
-      )
+      this.name[this.position] = String.fromCharCode(charCode === 90 ? 65 : charCode + 1)
     } else if (action === 'down') {
       const charCode = this.name[this.position].charCodeAt(0)
-      this.name[this.position] = String.fromCharCode(
-        charCode === 65 ? 90 : charCode - 1,
-      )
+      this.name[this.position] = String.fromCharCode(charCode === 65 ? 90 : charCode - 1)
     } else if (action === 'right') {
       this.position = Math.min(2, this.position + 1)
     } else if (action === 'left') {
@@ -163,10 +159,7 @@ class MainMenu {
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('right')) {
-      this.selectedIndex = Math.min(
-        this.games.length - 1,
-        this.selectedIndex + 1,
-      )
+      this.selectedIndex = Math.min(this.games.length - 1, this.selectedIndex + 1)
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('up')) {
@@ -174,10 +167,7 @@ class MainMenu {
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('down')) {
-      this.selectedIndex = Math.min(
-        this.games.length - 1,
-        this.selectedIndex + this.columns,
-      )
+      this.selectedIndex = Math.min(this.games.length - 1, this.selectedIndex + this.columns)
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('action1') || input.isJustPressed('start')) {
@@ -230,11 +220,7 @@ class MainMenu {
       ctx.font = '10px "Press Start 2P"'
       ctx.fillStyle = isSelected ? '#05d9e8' : '#fff'
       ctx.textAlign = 'center'
-      ctx.fillText(
-        this.getGameTitle(this.games[i]),
-        x + tileSize / 2,
-        y + tileSize - 15,
-      )
+      ctx.fillText(this.getGameTitle(this.games[i]), x + tileSize / 2, y + tileSize - 15)
     }
 
     // Footer
@@ -328,10 +314,7 @@ class PauseMenu {
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('down')) {
-      this.selectedIndex = Math.min(
-        this.options.length - 1,
-        this.selectedIndex + 1,
-      )
+      this.selectedIndex = Math.min(this.options.length - 1, this.selectedIndex + 1)
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('action1') || input.isJustPressed('start')) {
@@ -396,11 +379,7 @@ class PauseMenu {
       ctx.fillStyle = isSelected ? '#f9f871' : '#fff'
 
       if (isSelected) {
-        ctx.fillText(
-          '▶ ' + this.options[i],
-          width / 2,
-          optionStartY + i * optionGap,
-        )
+        ctx.fillText('▶ ' + this.options[i], width / 2, optionStartY + i * optionGap)
       } else {
         ctx.fillText(this.options[i], width / 2, optionStartY + i * optionGap)
       }
@@ -545,10 +524,7 @@ class SettingsScreen {
       this.shell.audio.play('menu-select')
     }
     if (input.isJustPressed('down')) {
-      this.selectedIndex = Math.min(
-        this.options.length - 1,
-        this.selectedIndex + 1,
-      )
+      this.selectedIndex = Math.min(this.options.length - 1, this.selectedIndex + 1)
       this.shell.audio.play('menu-select')
     }
 

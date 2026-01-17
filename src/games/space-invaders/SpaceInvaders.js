@@ -86,8 +86,7 @@ export class SpaceInvaders extends Game {
 
     // Create aliens
     this.aliens = []
-    const startX =
-      (width - this.alienCols * (this.alienWidth + this.alienPadding)) / 2
+    const startX = (width - this.alienCols * (this.alienWidth + this.alienPadding)) / 2
     const startY = 80 + (this.wave - 1) * 20 // Lower each wave
 
     for (let row = 0; row < this.alienRows; row++) {
@@ -123,8 +122,7 @@ export class SpaceInvaders extends Game {
   createShields() {
     this.shields = []
     const { width } = this.canvas
-    const totalWidth =
-      this.shieldCount * this.shieldWidth + (this.shieldCount - 1) * 80
+    const totalWidth = this.shieldCount * this.shieldWidth + (this.shieldCount - 1) * 80
     const startX = (width - totalWidth) / 2
 
     for (let i = 0; i < this.shieldCount; i++) {
@@ -133,10 +131,7 @@ export class SpaceInvaders extends Game {
       for (let row = 0; row < 4; row++) {
         for (let col = 0; col < 6; col++) {
           // Skip corners for shield shape
-          if (
-            (row === 0 && (col === 0 || col === 5)) ||
-            (row === 3 && col >= 2 && col <= 3)
-          ) {
+          if ((row === 0 && (col === 0 || col === 5)) || (row === 3 && col >= 2 && col <= 3)) {
             continue
           }
           this.shields.push({
@@ -164,10 +159,7 @@ export class SpaceInvaders extends Game {
     const dir = this.input.getDirection()
 
     this.player.x += dir.x * this.playerSpeed
-    this.player.x = Math.max(
-      0,
-      Math.min(width - this.playerWidth, this.player.x),
-    )
+    this.player.x = Math.max(0, Math.min(width - this.playerWidth, this.player.x))
 
     // Fire bullet
     if (
@@ -201,7 +193,7 @@ export class SpaceInvaders extends Game {
         this.playerBulletHeight,
         this.ufo,
         this.ufoWidth,
-        this.ufoHeight,
+        this.ufoHeight
       )
     ) {
       this.addScore(this.ufo.points)
@@ -220,7 +212,7 @@ export class SpaceInvaders extends Game {
           this.playerBulletHeight,
           alien,
           this.alienWidth,
-          this.alienHeight,
+          this.alienHeight
         )
       ) {
         alien.alive = false
@@ -275,8 +267,7 @@ export class SpaceInvaders extends Game {
 
     // Random alien fires
     if (aliveAliens.length > 0 && Math.random() < 0.3) {
-      const shooter =
-        aliveAliens[Math.floor(Math.random() * aliveAliens.length)]
+      const shooter = aliveAliens[Math.floor(Math.random() * aliveAliens.length)]
       this.alienBullets.push({
         x: shooter.x + this.alienWidth / 2 - this.bulletWidth / 2,
         y: shooter.y + this.alienHeight,
@@ -312,7 +303,7 @@ export class SpaceInvaders extends Game {
           this.player,
           this.playerWidth,
           this.playerHeight,
-          this.playerY,
+          this.playerY
         )
       ) {
         this.alienBullets.splice(i, 1)
@@ -364,15 +355,7 @@ export class SpaceInvaders extends Game {
   checkBulletShieldCollision(bullet, bulletHeight) {
     for (let i = this.shields.length - 1; i >= 0; i--) {
       const shield = this.shields[i]
-      if (
-        this.bulletHitsRect(
-          bullet,
-          bulletHeight,
-          shield,
-          shield.width,
-          shield.height,
-        )
-      ) {
+      if (this.bulletHitsRect(bullet, bulletHeight, shield, shield.width, shield.height)) {
         this.shields.splice(i, 1)
         return true
       }
@@ -439,19 +422,14 @@ export class SpaceInvaders extends Game {
         this.playerBullet.x,
         this.playerBullet.y,
         this.bulletWidth,
-        this.playerBulletHeight,
+        this.playerBulletHeight
       )
     }
 
     // Alien bullets
     ctx.fillStyle = '#f9f871'
     for (const bullet of this.alienBullets) {
-      ctx.fillRect(
-        bullet.x,
-        bullet.y,
-        this.bulletWidth,
-        this.alienBulletHeight,
-      )
+      ctx.fillRect(bullet.x, bullet.y, this.bulletWidth, this.alienBulletHeight)
     }
 
     // HUD
@@ -519,7 +497,7 @@ export class SpaceInvaders extends Game {
       this.ufoHeight / 2,
       0,
       0,
-      Math.PI * 2,
+      Math.PI * 2
     )
     ctx.fill()
     ctx.beginPath()
@@ -530,7 +508,7 @@ export class SpaceInvaders extends Game {
       this.ufoHeight / 3,
       0,
       0,
-      Math.PI * 2,
+      Math.PI * 2
     )
     ctx.fill()
   }

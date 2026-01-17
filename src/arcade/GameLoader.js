@@ -36,9 +36,7 @@ export class GameLoader {
 
       // Verify it's a constructor function or class
       if (typeof GameClass !== 'function') {
-        throw new Error(
-          `Game module '${gameId}' default export is not a constructor`,
-        )
+        throw new Error(`Game module '${gameId}' default export is not a constructor`)
       }
 
       // Store the game instance

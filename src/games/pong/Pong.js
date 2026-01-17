@@ -95,10 +95,7 @@ export class Pong extends Game {
 
     // Start game on action
     if (!this.gameStarted) {
-      if (
-        this.input.isJustPressed('action1') ||
-        this.input.isJustPressed('start')
-      ) {
+      if (this.input.isJustPressed('action1') || this.input.isJustPressed('start')) {
         this.gameStarted = true
         this.resetBall()
         this.audio.play('game-start')
@@ -123,10 +120,7 @@ export class Pong extends Game {
     }
 
     // Clamp paddle 1
-    this.paddle1.y = Math.max(
-      0,
-      Math.min(height - this.paddleHeight, this.paddle1.y),
-    )
+    this.paddle1.y = Math.max(0, Math.min(height - this.paddleHeight, this.paddle1.y))
 
     // Player 2 or AI
     if (this.gameMode === 'human') {
@@ -142,10 +136,7 @@ export class Pong extends Game {
     }
 
     // Clamp paddle 2
-    this.paddle2.y = Math.max(
-      0,
-      Math.min(height - this.paddleHeight, this.paddle2.y),
-    )
+    this.paddle2.y = Math.max(0, Math.min(height - this.paddleHeight, this.paddle2.y))
   }
 
   updateAI() {
@@ -215,15 +206,11 @@ export class Pong extends Game {
       }
 
       // Angle based on hit position
-      const hitPos =
-        (this.ball.y + this.ballSize / 2 - paddle.y) / this.paddleHeight
+      const hitPos = (this.ball.y + this.ballSize / 2 - paddle.y) / this.paddleHeight
       const angle = ((hitPos - 0.5) * Math.PI) / 3 // -60° to +60°
 
       // Increase speed
-      this.ball.speed = Math.min(
-        this.ballMaxSpeed,
-        this.ball.speed + this.ballSpeedIncrease,
-      )
+      this.ball.speed = Math.min(this.ballMaxSpeed, this.ball.speed + this.ballSpeedIncrease)
 
       // Apply new velocity
       const direction = this.ball.vx > 0 ? 1 : -1
@@ -292,18 +279,8 @@ export class Pong extends Game {
     ctx.fillStyle = '#fff'
     ctx.shadowColor = '#fff'
     ctx.shadowBlur = 10
-    ctx.fillRect(
-      this.paddle1.x,
-      this.paddle1.y,
-      this.paddleWidth,
-      this.paddleHeight,
-    )
-    ctx.fillRect(
-      this.paddle2.x,
-      this.paddle2.y,
-      this.paddleWidth,
-      this.paddleHeight,
-    )
+    ctx.fillRect(this.paddle1.x, this.paddle1.y, this.paddleWidth, this.paddleHeight)
+    ctx.fillRect(this.paddle2.x, this.paddle2.y, this.paddleWidth, this.paddleHeight)
     ctx.shadowBlur = 0
 
     // Ball

@@ -260,13 +260,7 @@ export class Tetris extends Game {
     const rotated = this.rotateMatrix(this.currentPiece.shape)
 
     // Try rotation at current position
-    if (
-      !this.checkCollisionWithShape(
-        rotated,
-        this.currentPiece.x,
-        this.currentPiece.y,
-      )
-    ) {
+    if (!this.checkCollisionWithShape(rotated, this.currentPiece.x, this.currentPiece.y)) {
       this.currentPiece.shape = rotated
       this.lockTimer = 0
       this.audio.play('hit')
@@ -275,13 +269,7 @@ export class Tetris extends Game {
 
     // Wall kick: try shifting left/right
     for (const kick of [-1, 1, -2, 2]) {
-      if (
-        !this.checkCollisionWithShape(
-          rotated,
-          this.currentPiece.x + kick,
-          this.currentPiece.y,
-        )
-      ) {
+      if (!this.checkCollisionWithShape(rotated, this.currentPiece.x + kick, this.currentPiece.y)) {
         this.currentPiece.shape = rotated
         this.currentPiece.x += kick
         this.lockTimer = 0
@@ -438,7 +426,7 @@ export class Tetris extends Game {
       this.gridOffsetX,
       this.gridOffsetY,
       this.cols * this.cellSize,
-      this.rows * this.cellSize,
+      this.rows * this.cellSize
     )
 
     // Draw grid lines
@@ -447,19 +435,13 @@ export class Tetris extends Game {
     for (let x = 0; x <= this.cols; x++) {
       ctx.beginPath()
       ctx.moveTo(this.gridOffsetX + x * this.cellSize, this.gridOffsetY)
-      ctx.lineTo(
-        this.gridOffsetX + x * this.cellSize,
-        this.gridOffsetY + this.rows * this.cellSize,
-      )
+      ctx.lineTo(this.gridOffsetX + x * this.cellSize, this.gridOffsetY + this.rows * this.cellSize)
       ctx.stroke()
     }
     for (let y = 0; y <= this.rows; y++) {
       ctx.beginPath()
       ctx.moveTo(this.gridOffsetX, this.gridOffsetY + y * this.cellSize)
-      ctx.lineTo(
-        this.gridOffsetX + this.cols * this.cellSize,
-        this.gridOffsetY + y * this.cellSize,
-      )
+      ctx.lineTo(this.gridOffsetX + this.cols * this.cellSize, this.gridOffsetY + y * this.cellSize)
       ctx.stroke()
     }
 
@@ -481,7 +463,7 @@ export class Tetris extends Game {
         this.currentPiece.shape,
         this.currentPiece.x,
         ghostY,
-        this.currentPiece.color,
+        this.currentPiece.color
       )
       ctx.globalAlpha = 1
 
@@ -491,7 +473,7 @@ export class Tetris extends Game {
         this.currentPiece.shape,
         this.currentPiece.x,
         this.currentPiece.y,
-        this.currentPiece.color,
+        this.currentPiece.color
       )
     }
 
@@ -517,11 +499,7 @@ export class Tetris extends Game {
       ctx.textAlign = 'center'
       ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2)
       ctx.font = '12px "Press Start 2P", monospace'
-      ctx.fillText(
-        `Score: ${this.score}`,
-        this.canvas.width / 2,
-        this.canvas.height / 2 + 40,
-      )
+      ctx.fillText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 40)
     }
   }
 
@@ -595,12 +573,7 @@ export class Tetris extends Game {
       for (let c = 0; c < shape[r].length; c++) {
         if (shape[r][c]) {
           ctx.fillStyle = color
-          ctx.fillRect(
-            x + c * miniSize,
-            y + r * miniSize,
-            miniSize - 2,
-            miniSize - 2,
-          )
+          ctx.fillRect(x + c * miniSize, y + r * miniSize, miniSize - 2, miniSize - 2)
         }
       }
     }

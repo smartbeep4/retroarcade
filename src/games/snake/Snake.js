@@ -9,7 +9,7 @@ export class Snake extends Game {
     return {
       id: 'snake',
       title: 'Snake',
-      description: 'Eat food, grow longer, don\'t hit yourself!',
+      description: "Eat food, grow longer, don't hit yourself!",
       thumbnail: '/assets/sprites/snake-thumb.png',
       startLives: 1,
       highScoreType: 'highest',
@@ -114,12 +114,7 @@ export class Snake extends Game {
       head.x = (head.x + this.gridSize) % this.gridSize
       head.y = (head.y + this.gridSize) % this.gridSize
     } else {
-      if (
-        head.x < 0 ||
-        head.x >= this.gridSize ||
-        head.y < 0 ||
-        head.y >= this.gridSize
-      ) {
+      if (head.x < 0 || head.x >= this.gridSize || head.y < 0 || head.y >= this.gridSize) {
         this.gameOver()
         return
       }
@@ -222,7 +217,7 @@ export class Snake extends Game {
       x * this.cellSize + padding,
       y * this.cellSize + padding,
       this.cellSize - padding * 2,
-      this.cellSize - padding * 2,
+      this.cellSize - padding * 2
     )
   }
 }

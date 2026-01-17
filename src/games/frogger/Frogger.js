@@ -259,9 +259,7 @@ export class Frogger extends Game {
     const frogY = this.frog.row
 
     // Check if on river
-    const riverLane = this.lanes.find(
-      (l) => l.row === frogY && l.type === 'river',
-    )
+    const riverLane = this.lanes.find((l) => l.row === frogY && l.type === 'river')
     if (!riverLane) {
       this.frog.riding = null
       return
@@ -279,8 +277,7 @@ export class Frogger extends Game {
         this.frog.riding = { lane: riverLane, obj }
 
         // Move frog with object
-        this.frog.col +=
-          (riverLane.speed * riverLane.direction) / this.cellSize
+        this.frog.col += (riverLane.speed * riverLane.direction) / this.cellSize
 
         // Clamp to screen - die if pushed off edge
         if (this.frog.col < 0 || this.frog.col >= this.cols) {
@@ -400,18 +397,8 @@ export class Frogger extends Game {
 
     // Safe zones (start and median)
     ctx.fillStyle = '#2a2a4e'
-    ctx.fillRect(
-      0,
-      this.startRow * this.cellSize,
-      this.canvas.width,
-      this.cellSize,
-    )
-    ctx.fillRect(
-      0,
-      this.medianRow * this.cellSize,
-      this.canvas.width,
-      this.cellSize,
-    )
+    ctx.fillRect(0, this.startRow * this.cellSize, this.canvas.width, this.cellSize)
+    ctx.fillRect(0, this.medianRow * this.cellSize, this.canvas.width, this.cellSize)
 
     // Road
     ctx.fillStyle = '#333'
@@ -433,12 +420,7 @@ export class Frogger extends Game {
     for (const home of this.homes) {
       const x = home.col * this.cellSize
       ctx.fillStyle = home.filled ? '#39ff14' : '#0a2a0f'
-      ctx.fillRect(
-        x - 5,
-        this.cellSize * 0.5,
-        this.cellSize + 10,
-        this.cellSize,
-      )
+      ctx.fillRect(x - 5, this.cellSize * 0.5, this.cellSize + 10, this.cellSize)
 
       if (home.hasFly && !home.filled) {
         ctx.fillStyle = '#f9f871'
@@ -470,10 +452,8 @@ export class Frogger extends Game {
     }
 
     // Frog
-    const frogX =
-      this.frog.col * this.cellSize + (this.cellSize - this.frogSize) / 2
-    const frogY =
-      this.frog.row * this.cellSize + (this.cellSize - this.frogSize) / 2
+    const frogX = this.frog.col * this.cellSize + (this.cellSize - this.frogSize) / 2
+    const frogY = this.frog.row * this.cellSize + (this.cellSize - this.frogSize) / 2
     ctx.fillStyle = '#39ff14'
     ctx.shadowColor = '#39ff14'
     ctx.shadowBlur = 10
@@ -495,22 +475,13 @@ export class Frogger extends Game {
     ctx.fillStyle = '#333'
     ctx.fillRect(timerX, 10, timerWidth, 15)
     ctx.fillStyle = this.timeRemaining < 10 ? '#ff2a6d' : '#39ff14'
-    ctx.fillRect(
-      timerX,
-      10,
-      (this.timeRemaining / this.maxTime) * timerWidth,
-      15,
-    )
+    ctx.fillRect(timerX, 10, (this.timeRemaining / this.maxTime) * timerWidth, 15)
 
     // Lives
     ctx.textAlign = 'right'
     ctx.fillStyle = '#39ff14'
     ctx.font = '10px "Press Start 2P", monospace'
-    ctx.fillText(
-      `LIVES: ${this.lives}`,
-      this.canvas.width - 10,
-      this.canvas.height - 10,
-    )
+    ctx.fillText(`LIVES: ${this.lives}`, this.canvas.width - 10, this.canvas.height - 10)
   }
 
   drawFrog(ctx, x, y) {

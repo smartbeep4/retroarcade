@@ -104,9 +104,7 @@ function setupUnlockListeners() {
     unlock()
     events.forEach((e) => document.removeEventListener(e, unlockHandler))
   }
-  events.forEach((e) =>
-    document.addEventListener(e, unlockHandler, { once: true }),
-  )
+  events.forEach((e) => document.addEventListener(e, unlockHandler, { once: true }))
 }
 
 /**
@@ -201,8 +199,7 @@ function play(soundId, options = {}) {
 
       // Playback options
       if (options.loop || config.loop) source.loop = true
-      if (options.playbackRate)
-        source.playbackRate.value = options.playbackRate
+      if (options.playbackRate) source.playbackRate.value = options.playbackRate
 
       source.start(0)
 

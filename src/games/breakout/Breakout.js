@@ -66,8 +66,7 @@ export class Breakout extends Game {
     this.brickGap = 2
     this.brickOffsetTop = 60
     this.brickOffsetLeft =
-      (this.canvas.width - this.brickCols * (this.brickWidth + this.brickGap)) /
-      2
+      (this.canvas.width - this.brickCols * (this.brickWidth + this.brickGap)) / 2
 
     // Game state
     this.paddle = { x: 0, width: this.paddleWidth }
@@ -142,20 +141,14 @@ export class Breakout extends Game {
     // Paddle movement
     const dir = this.input.getDirection()
     this.paddle.x += dir.x * this.paddleSpeed
-    this.paddle.x = Math.max(
-      0,
-      Math.min(this.canvas.width - this.paddle.width, this.paddle.x),
-    )
+    this.paddle.x = Math.max(0, Math.min(this.canvas.width - this.paddle.width, this.paddle.x))
 
     // Launch ball
     const attachedBall = this.balls.find((b) => b.attached)
     if (attachedBall) {
       attachedBall.x = this.paddle.x + this.paddle.width / 2
 
-      if (
-        this.input.isJustPressed('action1') ||
-        this.input.isJustPressed('start')
-      ) {
+      if (this.input.isJustPressed('action1') || this.input.isJustPressed('start')) {
         attachedBall.attached = false
         attachedBall.vx = (Math.random() - 0.5) * 2
         attachedBall.vy = -this.ballSpeed
@@ -259,10 +252,7 @@ export class Breakout extends Game {
   ballBrickCollision(ball, brick) {
     // Find closest point on brick to ball
     const closestX = Math.max(brick.x, Math.min(ball.x, brick.x + brick.width))
-    const closestY = Math.max(
-      brick.y,
-      Math.min(ball.y, brick.y + brick.height),
-    )
+    const closestY = Math.max(brick.y, Math.min(ball.y, brick.y + brick.height))
 
     const dx = ball.x - closestX
     const dy = ball.y - closestY
@@ -281,8 +271,7 @@ export class Breakout extends Game {
   }
 
   spawnPowerup(x, y) {
-    const type =
-      POWERUP_TYPES[Math.floor(Math.random() * POWERUP_TYPES.length)]
+    const type = POWERUP_TYPES[Math.floor(Math.random() * POWERUP_TYPES.length)]
     this.powerups.push({
       x,
       y,
@@ -333,16 +322,10 @@ export class Breakout extends Game {
         }
         break
       case 'expand':
-        this.paddle.width = Math.min(
-          this.maxPaddleWidth,
-          this.paddle.width + 50,
-        )
+        this.paddle.width = Math.min(this.maxPaddleWidth, this.paddle.width + 50)
         break
       case 'shrink':
-        this.paddle.width = Math.max(
-          this.minPaddleWidth,
-          this.paddle.width - 40,
-        )
+        this.paddle.width = Math.max(this.minPaddleWidth, this.paddle.width - 40)
         break
       case 'slow':
         this.balls.forEach((ball) => {
@@ -400,12 +383,7 @@ export class Breakout extends Game {
     ctx.fillStyle = '#05d9e8'
     ctx.shadowColor = '#05d9e8'
     ctx.shadowBlur = 10
-    ctx.fillRect(
-      this.paddle.x,
-      this.paddleY,
-      this.paddle.width,
-      this.paddleHeight,
-    )
+    ctx.fillRect(this.paddle.x, this.paddleY, this.paddle.width, this.paddleHeight)
     ctx.shadowBlur = 0
 
     // Draw balls
@@ -445,11 +423,7 @@ export class Breakout extends Game {
       ctx.font = '12px "Press Start 2P"'
       ctx.fillStyle = '#7f8c8d'
       ctx.textAlign = 'center'
-      ctx.fillText(
-        'PRESS SPACE TO LAUNCH',
-        this.canvas.width / 2,
-        this.canvas.height - 100,
-      )
+      ctx.fillText('PRESS SPACE TO LAUNCH', this.canvas.width / 2, this.canvas.height - 100)
     }
   }
 }
