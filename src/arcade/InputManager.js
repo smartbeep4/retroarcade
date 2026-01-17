@@ -53,6 +53,16 @@ const touchState = {
   position: null,
   swipeCallbacks: [],
   tapCallbacks: [],
+  lastTapPosition: null,
+  wasTapped: false,
+}
+
+// Mouse state
+const mouseState = {
+  position: null,
+  isDown: false,
+  wasClicked: false,
+  canvas: null,
 }
 
 let swipeStart = null
@@ -62,6 +72,7 @@ const SWIPE_THRESHOLD = 50 // pixels
 let keydownHandler = null
 let keyupHandler = null
 let touchHandlers = []
+let mouseHandlers = []
 
 /**
  * Initialize input system - sets up event listeners
@@ -73,6 +84,7 @@ function init() {
 
   initKeyboard()
   initTouch()
+  initMouse()
   state.initialized = true
 }
 
@@ -238,6 +250,15 @@ function initSwipeDetection() {
         touchState.swipeCallbacks.forEach((cb) => cb(direction))
       } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
         // Register as tap if very small movement
+        // Convert to canvas coordinates
+        const rect = canvas.getBoundingClientRect()
+        const scaleX = canvas.width / rect.width
+        const scaleY = canvas.height / rect.height
+        touchState.lastTapPosition = {
+          x: (end.x - rect.left) * scaleX,
+          y: (end.y - rect.top) * scaleY,
+        }
+        touchState.wasTapped = true
         touchState.tapCallbacks.forEach((cb) => cb({ x: end.x, y: end.y }))
       }
     }
@@ -258,6 +279,60 @@ function initSwipeDetection() {
     event: 'touchend',
     handler: touchEndHandler,
   })
+}
+
+/**
+ * Initialize mouse event listeners for menu navigation
+ */
+function initMouse() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const canvas = document.getElementById('game-canvas')
+  if (!canvas) return
+
+  mouseState.canvas = canvas
+
+  const mouseMoveHandler = (e) => {
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    mouseState.position = {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
+    }
+  }
+
+  const mouseDownHandler = (e) => {
+    if (e.button === 0) {
+      mouseState.isDown = true
+    }
+  }
+
+  const mouseUpHandler = (e) => {
+    if (e.button === 0) {
+      if (mouseState.isDown) {
+        mouseState.wasClicked = true
+      }
+      mouseState.isDown = false
+    }
+  }
+
+  const mouseLeaveHandler = () => {
+    mouseState.position = null
+    mouseState.isDown = false
+  }
+
+  canvas.addEventListener('mousemove', mouseMoveHandler)
+  canvas.addEventListener('mousedown', mouseDownHandler)
+  canvas.addEventListener('mouseup', mouseUpHandler)
+  canvas.addEventListener('mouseleave', mouseLeaveHandler)
+
+  mouseHandlers.push({ element: canvas, event: 'mousemove', handler: mouseMoveHandler })
+  mouseHandlers.push({ element: canvas, event: 'mousedown', handler: mouseDownHandler })
+  mouseHandlers.push({ element: canvas, event: 'mouseup', handler: mouseUpHandler })
+  mouseHandlers.push({ element: canvas, event: 'mouseleave', handler: mouseLeaveHandler })
 }
 
 /**
@@ -404,6 +479,46 @@ function getTouchPosition() {
 }
 
 /**
+ * Get current mouse position (canvas coordinates)
+ * @returns {{x: number, y: number}|null}
+ */
+function getMousePosition() {
+  return mouseState.position ? { ...mouseState.position } : null
+}
+
+/**
+ * Check if mouse was clicked this frame (clears on read)
+ * @returns {boolean}
+ */
+function isMouseJustClicked() {
+  if (mouseState.wasClicked) {
+    mouseState.wasClicked = false
+    return true
+  }
+  return false
+}
+
+/**
+ * Check if mouse button is currently down
+ * @returns {boolean}
+ */
+function isMouseDown() {
+  return mouseState.isDown
+}
+
+/**
+ * Check if screen was tapped this frame (clears on read)
+ * @returns {{x: number, y: number}|null} Tap position in canvas coordinates or null
+ */
+function getTapPosition() {
+  if (touchState.wasTapped) {
+    touchState.wasTapped = false
+    return touchState.lastTapPosition ? { ...touchState.lastTapPosition } : null
+  }
+  return null
+}
+
+/**
  * Register a swipe callback
  * @param {function} callback - Called with direction ('up', 'down', 'left', 'right')
  */
@@ -451,6 +566,18 @@ function destroy() {
   })
   touchHandlers = []
 
+  // Remove mouse handlers
+  mouseHandlers.forEach(({ element, event, handler }) => {
+    element.removeEventListener(event, handler)
+  })
+  mouseHandlers = []
+
+  // Clear mouse state
+  mouseState.position = null
+  mouseState.isDown = false
+  mouseState.wasClicked = false
+  mouseState.canvas = null
+
   // Clear state
   keysHeld.clear()
   state.current = {}
@@ -461,6 +588,8 @@ function destroy() {
   touchState.swipeCallbacks = []
   touchState.tapCallbacks = []
   touchState.position = null
+  touchState.lastTapPosition = null
+  touchState.wasTapped = false
 }
 
 // Export as singleton
@@ -484,6 +613,10 @@ export const InputManager = {
   getDirection,
   getDirectionVector,
   getTouchPosition,
+  getMousePosition,
+  isMouseJustClicked,
+  isMouseDown,
+  getTapPosition,
   onSwipe,
   onTap,
   isGamepadConnected,
