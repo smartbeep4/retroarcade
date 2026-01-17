@@ -314,7 +314,6 @@ describe('Breakout', () => {
       game.balls[0].y = brick.y + brick.height + game.ballRadius + 2
       game.balls[0].vx = 0
       game.balls[0].vy = -3 // Slow speed to avoid double collision
-      const initialVy = game.balls[0].vy
       game.updateBall(game.balls[0])
       // Ball should reverse vertical direction (negative becomes positive)
       expect(game.balls[0].vy).toBeGreaterThan(0)
