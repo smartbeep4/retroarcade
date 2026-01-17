@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test'
+import { Page, Locator } from '@playwright/test'
 import { StateBridge } from '../helpers/state-bridge'
 import { KeyboardController } from '../helpers/keyboard-controller'
 import { CanvasInspector } from '../helpers/canvas-inspector'
