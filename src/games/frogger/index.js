@@ -1,4 +1,7 @@
 /**
  * Frogger game export
  */
-export { Frogger } from './Frogger.js'
+import { Frogger } from "./Frogger.js";
+
+export default Frogger;
+export { Frogger };

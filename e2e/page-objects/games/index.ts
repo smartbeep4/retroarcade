@@ -1,0 +1,10 @@
+export { SnakePage } from "./snake.page";
+export { PongPage } from "./pong.page";
+export { BreakoutPage } from "./breakout.page";
+export { FlappyPage } from "./flappy.page";
+export { SpaceInvadersPage } from "./space-invaders.page";
+export { FroggerPage } from "./frogger.page";
+export { TetrisPage } from "./tetris.page";
+export { AsteroidsPage } from "./asteroids.page";
+export { PacmanPage } from "./pacman.page";
+export { RoguelikePage } from "./roguelike.page";

@@ -1,1 +1,4 @@
-export { Flappy } from './Flappy.js'
+import { Flappy } from "./Flappy.js";
+
+export default Flappy;
+export { Flappy };
