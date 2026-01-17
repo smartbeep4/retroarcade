@@ -197,12 +197,28 @@ class TestBridgeClass {
         }
 
       case 'space-invaders':
+        // Combine playerBullet and alienBullets into a single array for tests
+        const allBullets = []
+        if (this.game.playerBullet) {
+          allBullets.push({ ...this.game.playerBullet, type: 'player' })
+        }
+        if (this.game.alienBullets) {
+          allBullets.push(
+            ...this.game.alienBullets.map((b) => ({ ...b, type: 'alien' })),
+          )
+        }
         return {
           ...baseState,
           player: this.game.player ? { ...this.game.player } : null,
           aliens: this.game.aliens ? [...this.game.aliens] : [],
           alienCount: this.game.aliens?.filter((a) => a.alive).length || 0,
-          bullets: this.game.bullets ? [...this.game.bullets] : [],
+          bullets: allBullets,
+          playerBullet: this.game.playerBullet
+            ? { ...this.game.playerBullet }
+            : null,
+          alienBullets: this.game.alienBullets
+            ? [...this.game.alienBullets]
+            : [],
           shields: this.game.shields ? [...this.game.shields] : [],
           ufo: this.game.ufo ? { ...this.game.ufo } : null,
           alienDirection: this.game.alienDirection,

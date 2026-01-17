@@ -57,6 +57,14 @@ const touchState = {
   directInput: {},
 }
 
+// Mouse state for menu navigation
+const mouseState = {
+  position: null,
+  isDown: false,
+  wasClicked: false,
+  canvas: null,
+}
+
 let swipeStart = null
 const SWIPE_THRESHOLD = 50 // pixels
 
