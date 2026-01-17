@@ -253,8 +253,7 @@ export class Pacman extends Game {
       this.modeTimer -= deltaTime
       if (this.modeTimer <= 0) {
         this.mode = this.mode === 'scatter' ? 'chase' : 'scatter'
-        this.modeTimer =
-          this.mode === 'scatter' ? this.scatterDuration : this.chaseDuration
+        this.modeTimer = this.mode === 'scatter' ? this.scatterDuration : this.chaseDuration
       }
     }
   }
@@ -279,10 +278,7 @@ export class Pacman extends Game {
         pm.y += pm.direction.y * this.pacmanSpeed
 
         // Snap to grid
-        if (
-          Math.abs(pm.x - Math.round(pm.x)) < 0.1 &&
-          Math.abs(pm.y - Math.round(pm.y)) < 0.1
-        ) {
+        if (Math.abs(pm.x - Math.round(pm.x)) < 0.1 && Math.abs(pm.y - Math.round(pm.y)) < 0.1) {
           pm.col = Math.round(pm.x)
           pm.row = Math.round(pm.y)
           pm.x = pm.col
@@ -401,8 +397,7 @@ export class Pacman extends Game {
 
       case 'clyde': {
         // Chase when far, scatter when close
-        const dist =
-          Math.abs(pm.col - ghost.col) + Math.abs(pm.row - ghost.row)
+        const dist = Math.abs(pm.col - ghost.col) + Math.abs(pm.row - ghost.row)
         if (dist > 8) {
           return { col: pm.col, row: pm.row }
         }
@@ -416,10 +411,7 @@ export class Pacman extends Game {
 
   moveGhostToTarget(ghost, target) {
     // At intersection, choose direction toward target
-    if (
-      Math.abs(ghost.x - ghost.col) < 0.05 &&
-      Math.abs(ghost.y - ghost.row) < 0.05
-    ) {
+    if (Math.abs(ghost.x - ghost.col) < 0.05 && Math.abs(ghost.y - ghost.row) < 0.05) {
       ghost.x = ghost.col
       ghost.y = ghost.row
 
@@ -435,16 +427,14 @@ export class Pacman extends Game {
 
       for (const dir of directions) {
         // Can't reverse
-        if (dir.x === -ghost.direction.x && dir.y === -ghost.direction.y)
-          continue
+        if (dir.x === -ghost.direction.x && dir.y === -ghost.direction.y) continue
 
         // Can't go through walls
         if (!this.canMove(ghost.col, ghost.row, dir)) continue
 
         const nextCol = ghost.col + dir.x
         const nextRow = ghost.row + dir.y
-        const dist =
-          Math.abs(target.col - nextCol) + Math.abs(target.row - nextRow)
+        const dist = Math.abs(target.col - nextCol) + Math.abs(target.row - nextRow)
 
         if (dist < bestDist) {
           bestDist = dist
@@ -480,24 +470,19 @@ export class Pacman extends Game {
   }
 
   moveGhostRandom(ghost) {
-    if (
-      Math.abs(ghost.x - ghost.col) < 0.05 &&
-      Math.abs(ghost.y - ghost.row) < 0.05
-    ) {
+    if (Math.abs(ghost.x - ghost.col) < 0.05 && Math.abs(ghost.y - ghost.row) < 0.05) {
       const directions = [
         { x: 0, y: -1 },
         { x: 0, y: 1 },
         { x: -1, y: 0 },
         { x: 1, y: 0 },
       ].filter((d) => {
-        if (d.x === -ghost.direction.x && d.y === -ghost.direction.y)
-          return false
+        if (d.x === -ghost.direction.x && d.y === -ghost.direction.y) return false
         return this.canMove(ghost.col, ghost.row, d)
       })
 
       if (directions.length > 0) {
-        ghost.direction =
-          directions[Math.floor(Math.random() * directions.length)]
+        ghost.direction = directions[Math.floor(Math.random() * directions.length)]
       }
     }
 
@@ -519,12 +504,7 @@ export class Pacman extends Game {
     const nextRow = row + direction.y
 
     // Bounds check - allow tunnel at sides
-    if (
-      nextCol < 0 ||
-      nextCol >= this.cols ||
-      nextRow < 0 ||
-      nextRow >= this.rows
-    ) {
+    if (nextCol < 0 || nextCol >= this.cols || nextRow < 0 || nextRow >= this.rows) {
       return col === 0 || col === this.cols - 1 // Allow tunnel at edges
     }
 
@@ -544,9 +524,7 @@ export class Pacman extends Game {
           // Eat ghost
           ghost.eaten = true
           this.ghostsEaten++
-          const points = [200, 400, 800, 1600][
-            Math.min(this.ghostsEaten - 1, 3)
-          ]
+          const points = [200, 400, 800, 1600][Math.min(this.ghostsEaten - 1, 3)]
           this.score += points
           this.audio.play('score')
         } else {
@@ -614,12 +592,7 @@ export class Pacman extends Game {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         if (this.maze[row][col] === 1) {
-          ctx.fillRect(
-            this.offsetX + col * ts,
-            this.offsetY + row * ts,
-            ts,
-            ts,
-          )
+          ctx.fillRect(this.offsetX + col * ts, this.offsetY + row * ts, ts, ts)
         }
       }
     }
@@ -634,7 +607,7 @@ export class Pacman extends Game {
           this.offsetY + dot.row * ts + ts / 2,
           3,
           0,
-          Math.PI * 2,
+          Math.PI * 2
         )
         ctx.fill()
       }
@@ -650,7 +623,7 @@ export class Pacman extends Game {
           this.offsetY + pellet.row * ts + ts / 2,
           8,
           0,
-          Math.PI * 2,
+          Math.PI * 2
         )
         ctx.fill()
       }
@@ -665,7 +638,7 @@ export class Pacman extends Game {
         this.offsetY + this.fruit.row * ts + ts / 2,
         10,
         0,
-        Math.PI * 2,
+        Math.PI * 2
       )
       ctx.fill()
     }
@@ -761,20 +734,8 @@ export class Pacman extends Game {
 
       ctx.fillStyle = ghost.frightened ? '#fff' : '#00f'
       ctx.beginPath()
-      ctx.arc(
-        x - 4 + ghost.direction.x * 2,
-        y - 3 + ghost.direction.y * 2,
-        2,
-        0,
-        Math.PI * 2,
-      )
-      ctx.arc(
-        x + 4 + ghost.direction.x * 2,
-        y - 3 + ghost.direction.y * 2,
-        2,
-        0,
-        Math.PI * 2,
-      )
+      ctx.arc(x - 4 + ghost.direction.x * 2, y - 3 + ghost.direction.y * 2, 2, 0, Math.PI * 2)
+      ctx.arc(x + 4 + ghost.direction.x * 2, y - 3 + ghost.direction.y * 2, 2, 0, Math.PI * 2)
       ctx.fill()
     }
   }

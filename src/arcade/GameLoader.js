@@ -36,9 +36,7 @@ export class GameLoader {
 
       // Verify it's a constructor function or class
       if (typeof GameClass !== 'function') {
-        throw new Error(
-          `Game module '${gameId}' default export is not a constructor`,
-        )
+        throw new Error(`Game module '${gameId}' default export is not a constructor`)
       }
 
       // Store the game instance
@@ -87,9 +85,8 @@ export class GameLoader {
         if (typeof this.currentGame.removeEventListeners === 'function') {
           this.currentGame.removeEventListeners()
         }
-      } catch (error) {
-        // Log but don't throw - we want to ensure cleanup completes
-        console.warn('Error during game cleanup:', error)
+      } catch (_error) {
+        // Silently handle cleanup errors - we want to ensure cleanup completes
       }
     }
 

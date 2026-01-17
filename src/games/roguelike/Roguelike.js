@@ -253,9 +253,7 @@ export class Roguelike extends Game {
     for (let i = 0; i < numEnemies; i++) {
       // Pick random room (not first if possible)
       const roomIndex =
-        this.rooms.length > 1
-          ? 1 + Math.floor(Math.random() * (this.rooms.length - 1))
-          : 0
+        this.rooms.length > 1 ? 1 + Math.floor(Math.random() * (this.rooms.length - 1)) : 0
       const room = this.rooms[roomIndex]
 
       const x = room.x + 1 + Math.floor(Math.random() * (room.w - 2))
@@ -341,8 +339,7 @@ export class Roguelike extends Game {
         const ix = Math.floor(x)
         const iy = Math.floor(y)
 
-        if (ix < 0 || ix >= this.mapWidth || iy < 0 || iy >= this.mapHeight)
-          break
+        if (ix < 0 || ix >= this.mapWidth || iy < 0 || iy >= this.mapHeight) break
 
         this.visible[iy][ix] = true
         this.explored[iy][ix] = true
@@ -419,8 +416,7 @@ export class Roguelike extends Game {
   }
 
   canWalk(x, y) {
-    if (x < 0 || x >= this.mapWidth || y < 0 || y >= this.mapHeight)
-      return false
+    if (x < 0 || x >= this.mapWidth || y < 0 || y >= this.mapHeight) return false
     const tile = this.map[y][x]
     return tile !== TILES.WALL
   }
@@ -456,9 +452,7 @@ export class Roguelike extends Game {
       if (dist === 1) {
         const damage = Math.max(1, enemy.damage - this.player.defense)
         this.player.hp -= damage
-        this.addMessage(
-          `${ENEMY_TYPES[enemy.type].name} hits you for ${damage}!`,
-        )
+        this.addMessage(`${ENEMY_TYPES[enemy.type].name} hits you for ${damage}!`)
         this.audio.play('hit')
         continue
       }
@@ -480,8 +474,7 @@ export class Roguelike extends Game {
       // Check if can move
       const canMove =
         enemy.phasing ||
-        (this.canWalk(newX, newY) &&
-          !this.enemies.some((e) => e.x === newX && e.y === newY))
+        (this.canWalk(newX, newY) && !this.enemies.some((e) => e.x === newX && e.y === newY))
 
       if (canMove && !(newX === this.player.x && newY === this.player.y)) {
         enemy.x = newX
@@ -491,9 +484,7 @@ export class Roguelike extends Game {
   }
 
   pickupItems() {
-    const itemsHere = this.items.filter(
-      (i) => i.x === this.player.x && i.y === this.player.y,
-    )
+    const itemsHere = this.items.filter((i) => i.x === this.player.x && i.y === this.player.y)
 
     for (const item of itemsHere) {
       this.items = this.items.filter((i) => i !== item)
@@ -502,10 +493,7 @@ export class Roguelike extends Game {
 
       switch (item.effect) {
         case 'heal':
-          this.player.hp = Math.min(
-            this.player.maxHp,
-            this.player.hp + item.value,
-          )
+          this.player.hp = Math.min(this.player.maxHp, this.player.hp + item.value)
           this.addMessage(`Used ${item.name}! HP restored!`)
           break
         case 'attack':
@@ -549,17 +537,11 @@ export class Roguelike extends Game {
     // Calculate viewport
     const viewX = Math.max(
       0,
-      Math.min(
-        this.mapWidth - this.viewWidth,
-        this.player.x - Math.floor(this.viewWidth / 2),
-      ),
+      Math.min(this.mapWidth - this.viewWidth, this.player.x - Math.floor(this.viewWidth / 2))
     )
     const viewY = Math.max(
       0,
-      Math.min(
-        this.mapHeight - this.viewHeight,
-        this.player.y - Math.floor(this.viewHeight / 2),
-      ),
+      Math.min(this.mapHeight - this.viewHeight, this.player.y - Math.floor(this.viewHeight / 2))
     )
 
     // Draw map
@@ -609,12 +591,7 @@ export class Roguelike extends Game {
       const screenX = (enemy.x - viewX) * this.tileSize
       const screenY = (enemy.y - viewY) * this.tileSize
       ctx.fillStyle = enemy.color
-      ctx.fillRect(
-        screenX + 2,
-        screenY + 2,
-        this.tileSize - 4,
-        this.tileSize - 4,
-      )
+      ctx.fillRect(screenX + 2, screenY + 2, this.tileSize - 4, this.tileSize - 4)
 
       // Health bar for bosses
       if (enemy.isBoss) {
@@ -630,12 +607,7 @@ export class Roguelike extends Game {
     ctx.fillStyle = '#05d9e8'
     ctx.shadowColor = '#05d9e8'
     ctx.shadowBlur = 10
-    ctx.fillRect(
-      playerScreenX + 3,
-      playerScreenY + 3,
-      this.tileSize - 6,
-      this.tileSize - 6,
-    )
+    ctx.fillRect(playerScreenX + 3, playerScreenY + 3, this.tileSize - 6, this.tileSize - 6)
     ctx.shadowBlur = 0
 
     // Draw HUD

@@ -59,8 +59,7 @@ class TestBridgeClass {
       // Utility
       isEnabled: () => this.enabled,
       waitForState: (state, timeout) => this.waitForState(state, timeout),
-      waitForGameState: (state, timeout) =>
-        this.waitForGameState(state, timeout),
+      waitForGameState: (state, timeout) => this.waitForGameState(state, timeout),
     }
   }
 
@@ -170,9 +169,7 @@ class TestBridgeClass {
           snakeLength: this.game.snake?.length || 0,
           food: this.game.food ? { ...this.game.food } : null,
           direction: this.game.direction ? { ...this.game.direction } : null,
-          nextDirection: this.game.nextDirection
-            ? { ...this.game.nextDirection }
-            : null,
+          nextDirection: this.game.nextDirection ? { ...this.game.nextDirection } : null,
           gridSize: this.game.gridSize,
           cellSize: this.game.cellSize,
           moveInterval: this.game.moveInterval,
@@ -217,9 +214,7 @@ class TestBridgeClass {
           allBullets.push({ ...this.game.playerBullet, type: 'player' })
         }
         if (this.game.alienBullets) {
-          allBullets.push(
-            ...this.game.alienBullets.map((b) => ({ ...b, type: 'alien' })),
-          )
+          allBullets.push(...this.game.alienBullets.map((b) => ({ ...b, type: 'alien' })))
         }
         return {
           ...baseState,
@@ -227,12 +222,8 @@ class TestBridgeClass {
           aliens: this.game.aliens ? [...this.game.aliens] : [],
           alienCount: this.game.aliens?.filter((a) => a.alive).length || 0,
           bullets: allBullets,
-          playerBullet: this.game.playerBullet
-            ? { ...this.game.playerBullet }
-            : null,
-          alienBullets: this.game.alienBullets
-            ? [...this.game.alienBullets]
-            : [],
+          playerBullet: this.game.playerBullet ? { ...this.game.playerBullet } : null,
+          alienBullets: this.game.alienBullets ? [...this.game.alienBullets] : [],
           shields: this.game.shields ? [...this.game.shields] : [],
           ufo: this.game.ufo ? { ...this.game.ufo } : null,
           alienDirection: this.game.alienDirection,
@@ -254,9 +245,7 @@ class TestBridgeClass {
         return {
           ...baseState,
           grid: this.game.grid ? this.game.grid.map((row) => [...row]) : [],
-          currentPiece: this.game.currentPiece
-            ? { ...this.game.currentPiece }
-            : null,
+          currentPiece: this.game.currentPiece ? { ...this.game.currentPiece } : null,
           nextQueue: this.game.nextQueue ? [...this.game.nextQueue] : [],
           holdPiece: this.game.holdPiece,
           linesCleared: this.game.linesCleared,
@@ -281,9 +270,7 @@ class TestBridgeClass {
           dots: this.game.dots ? [...this.game.dots] : [],
           totalDots: this.game.totalDots,
           dotsEaten: this.game.dotsEaten,
-          powerPellets: this.game.powerPellets
-            ? [...this.game.powerPellets]
-            : [],
+          powerPellets: this.game.powerPellets ? [...this.game.powerPellets] : [],
           mode: this.game.mode,
           modeTimer: this.game.modeTimer,
         }
@@ -336,12 +323,7 @@ class TestBridgeClass {
     if (!this.shell?.canvas) return null
 
     const ctx = this.shell.canvas.getContext('2d')
-    return ctx.getImageData(
-      0,
-      0,
-      this.shell.canvas.width,
-      this.shell.canvas.height,
-    )
+    return ctx.getImageData(0, 0, this.shell.canvas.width, this.shell.canvas.height)
   }
 
   /**
@@ -404,9 +386,7 @@ class TestBridgeClass {
 
         if (Date.now() - startTime > timeout) {
           reject(
-            new Error(
-              `Timeout waiting for state '${targetState}'. Current: '${this.shell?.state}'`,
-            ),
+            new Error(`Timeout waiting for state '${targetState}'. Current: '${this.shell?.state}'`)
           )
           return
         }
@@ -434,8 +414,8 @@ class TestBridgeClass {
         if (Date.now() - startTime > timeout) {
           reject(
             new Error(
-              `Timeout waiting for game state '${targetState}'. Current: '${this.game?.state}'`,
-            ),
+              `Timeout waiting for game state '${targetState}'. Current: '${this.game?.state}'`
+            )
           )
           return
         }

@@ -283,21 +283,13 @@ class TouchControlsManager {
     actionsContainer.className = 'touch-actions'
 
     if (config.action2) {
-      const btn2 = this.createActionButton(
-        'btn-action2',
-        config.action2Label || 'B',
-        'action2'
-      )
+      const btn2 = this.createActionButton('btn-action2', config.action2Label || 'B', 'action2')
       actionsContainer.appendChild(btn2)
       this.elements.action2 = btn2
     }
 
     if (config.action1) {
-      const btn1 = this.createActionButton(
-        'btn-action1',
-        config.action1Label || 'A',
-        'action1'
-      )
+      const btn1 = this.createActionButton('btn-action1', config.action1Label || 'A', 'action1')
       actionsContainer.appendChild(btn1)
       this.elements.action1 = btn1
     }

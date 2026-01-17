@@ -167,9 +167,7 @@ export class Asteroids extends Game {
       this.ship.vy += Math.sin(this.ship.rotation) * this.thrustPower
 
       // Clamp speed
-      const speed = Math.sqrt(
-        this.ship.vx * this.ship.vx + this.ship.vy * this.ship.vy,
-      )
+      const speed = Math.sqrt(this.ship.vx * this.ship.vx + this.ship.vy * this.ship.vy)
       if (speed > this.maxSpeed) {
         this.ship.vx = (this.ship.vx / speed) * this.maxSpeed
         this.ship.vy = (this.ship.vy / speed) * this.maxSpeed
@@ -177,10 +175,7 @@ export class Asteroids extends Game {
     }
 
     // Fire
-    if (
-      this.input.isJustPressed('action1') &&
-      this.bullets.length < this.maxBullets
-    ) {
+    if (this.input.isJustPressed('action1') && this.bullets.length < this.maxBullets) {
       this.fireBullet()
     }
 
@@ -369,20 +364,14 @@ export class Asteroids extends Game {
     // Ship vs Asteroids
     for (let a = this.asteroids.length - 1; a >= 0; a--) {
       const asteroid = this.asteroids[a]
-      if (
-        this.distance(this.ship, asteroid) <
-        asteroid.radius + this.shipSize * 0.5
-      ) {
+      if (this.distance(this.ship, asteroid) < asteroid.radius + this.shipSize * 0.5) {
         this.die()
         return
       }
     }
 
     // Ship vs UFO
-    if (
-      this.ufo &&
-      this.distance(this.ship, this.ufo) < this.ufo.size + this.shipSize * 0.5
-    ) {
+    if (this.ufo && this.distance(this.ship, this.ufo) < this.ufo.size + this.shipSize * 0.5) {
       this.die()
       return
     }
@@ -493,10 +482,7 @@ export class Asteroids extends Game {
     }
 
     // Draw ship
-    if (
-      this.invincibleTimer <= 0 ||
-      Math.floor(this.invincibleTimer / 100) % 2 === 0
-    ) {
+    if (this.invincibleTimer <= 0 || Math.floor(this.invincibleTimer / 100) % 2 === 0) {
       this.drawShip(ctx)
     }
 

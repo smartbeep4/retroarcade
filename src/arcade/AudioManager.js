@@ -90,8 +90,8 @@ function init() {
 
     // Set up unlock listeners for user gestures
     setupUnlockListeners()
-  } catch (e) {
-    console.warn('Web Audio API not supported:', e)
+  } catch (_e) {
+    // Web Audio API not supported - audio features will be unavailable
   }
 }
 
@@ -104,9 +104,7 @@ function setupUnlockListeners() {
     unlock()
     events.forEach((e) => document.removeEventListener(e, unlockHandler))
   }
-  events.forEach((e) =>
-    document.addEventListener(e, unlockHandler, { once: true }),
-  )
+  events.forEach((e) => document.addEventListener(e, unlockHandler, { once: true }))
 }
 
 /**
@@ -151,7 +149,6 @@ async function loadSound(soundId) {
 
   const config = SOUNDS[soundId]
   if (!config) {
-    console.warn(`Unknown sound: ${soundId}`)
     return null
   }
 
@@ -161,8 +158,7 @@ async function loadSound(soundId) {
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
     bufferCache.set(soundId, audioBuffer)
     return audioBuffer
-  } catch (e) {
-    console.warn(`Failed to load sound: ${soundId}`, e)
+  } catch (_e) {
     return null
   }
 }
@@ -181,7 +177,6 @@ function play(soundId, options = {}) {
 
   const config = SOUNDS[soundId]
   if (!config) {
-    console.warn(`Unknown sound: ${soundId}`)
     return
   }
 
@@ -204,16 +199,15 @@ function play(soundId, options = {}) {
 
       // Playback options
       if (options.loop || config.loop) source.loop = true
-      if (options.playbackRate)
-        source.playbackRate.value = options.playbackRate
+      if (options.playbackRate) source.playbackRate.value = options.playbackRate
 
       source.start(0)
 
       // Return source for manual control if needed
       return source
     })
-    .catch((e) => {
-      console.warn(`Error playing sound ${soundId}:`, e)
+    .catch(() => {
+      // Sound playback failed silently
     })
 }
 
@@ -236,7 +230,6 @@ function playMusic(trackId, loop = true) {
 
   const config = SOUNDS[trackId]
   if (!config || !config.isMusic) {
-    console.warn(`Unknown music track: ${trackId}`)
     return
   }
 
@@ -263,8 +256,8 @@ function playMusic(trackId, loop = true) {
       currentMusicId = trackId
       isPaused = false
     })
-    .catch((e) => {
-      console.warn(`Error playing music ${trackId}:`, e)
+    .catch(() => {
+      // Music playback failed silently
     })
 }
 
@@ -314,7 +307,6 @@ function resumeMusic() {
 function setMusicTrack(trackId) {
   const config = SOUNDS[trackId]
   if (!config || !config.isMusic) {
-    console.warn(`Unknown music track: ${trackId}`)
     return
   }
 

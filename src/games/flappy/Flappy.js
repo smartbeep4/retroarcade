@@ -69,10 +69,7 @@ export class Flappy extends Game {
   update(_deltaTime) {
     // Start game on first flap
     if (!this.started) {
-      if (
-        this.input.isJustPressed('action1') ||
-        this.input.isJustPressed('up')
-      ) {
+      if (this.input.isJustPressed('action1') || this.input.isJustPressed('up')) {
         this.started = true
         this.flap()
         this.audio.play('game-start')
@@ -231,10 +228,7 @@ export class Flappy extends Game {
     ctx.globalAlpha = 0.7
     // Simple cloud shapes that scroll slowly
     for (let i = 0; i < 3; i++) {
-      const x =
-        ((i * 300 - this.bgOffset + this.canvas.width) %
-          (this.canvas.width + 200)) -
-        100
+      const x = ((i * 300 - this.bgOffset + this.canvas.width) % (this.canvas.width + 200)) - 100
       ctx.beginPath()
       ctx.arc(x, 100, 30, 0, Math.PI * 2)
       ctx.arc(x + 25, 90, 25, 0, Math.PI * 2)
@@ -290,20 +284,12 @@ export class Flappy extends Game {
 
   renderBird(ctx) {
     ctx.save()
-    ctx.translate(
-      this.birdX + this.birdWidth / 2,
-      this.bird.y + this.birdHeight / 2,
-    )
+    ctx.translate(this.birdX + this.birdWidth / 2, this.bird.y + this.birdHeight / 2)
     ctx.rotate((this.bird.rotation * Math.PI) / 180)
 
     // Bird body (yellow)
     ctx.fillStyle = '#f9f871'
-    ctx.fillRect(
-      -this.birdWidth / 2,
-      -this.birdHeight / 2,
-      this.birdWidth,
-      this.birdHeight,
-    )
+    ctx.fillRect(-this.birdWidth / 2, -this.birdHeight / 2, this.birdWidth, this.birdHeight)
 
     // Wing
     ctx.fillStyle = '#fff'
