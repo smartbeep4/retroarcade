@@ -1,4 +1,4 @@
-import { Asteroids } from "./Asteroids.js";
+import { Asteroids } from './Asteroids.js'
 
-export default Asteroids;
-export { Asteroids };
+export default Asteroids
+export { Asteroids }

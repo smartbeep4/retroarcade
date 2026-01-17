@@ -1,7 +1,7 @@
 /**
  * Breakout game entry point
  */
-import { Breakout } from "./Breakout.js";
+import { Breakout } from './Breakout.js'
 
-export default Breakout;
-export { Breakout };
+export default Breakout
+export { Breakout }
