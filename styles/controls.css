@@ -8,13 +8,13 @@
   height: 200px;
   display: none;
   z-index: 50;
+  pointer-events: none;
 }
 
-/* Show touch controls on mobile */
-@media (max-width: 768px), (pointer: coarse) {
-  #touch-controls.active {
-    display: flex;
-  }
+/* Show touch controls on mobile when active */
+#touch-controls.active {
+  display: block;
+  pointer-events: auto;
 }
 
 /* D-Pad Layout */
@@ -28,14 +28,15 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 5px;
+  pointer-events: auto;
 }
 
 .touch-btn {
-  background: rgba(26, 26, 46, 0.8);
+  background: rgba(26, 26, 46, 0.85);
   border: 2px solid var(--neon-cyan);
   color: var(--neon-cyan);
   font-family: "Press Start 2P", monospace;
-  font-size: 20px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,15 +44,19 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition: all 0.1s ease;
+  border-radius: 8px;
+  touch-action: manipulation;
 }
 
-.touch-btn:active {
+.touch-btn:active,
+.touch-btn.active {
   background: var(--neon-cyan);
   color: var(--bg-dark);
   box-shadow: var(--glow-cyan);
+  transform: scale(0.95);
 }
 
-/* D-Pad buttons */
+/* D-Pad buttons positioning */
 .touch-up {
   grid-column: 2;
   grid-row: 1;
@@ -79,17 +84,18 @@
   bottom: 20px;
   display: flex;
   gap: 15px;
+  pointer-events: auto;
 }
 
 .touch-action-btn {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: rgba(26, 26, 46, 0.8);
-  border: 2px solid var(--neon-pink);
+  background: rgba(26, 26, 46, 0.85);
+  border: 3px solid var(--neon-pink);
   color: var(--neon-pink);
   font-family: "Press Start 2P", monospace;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,13 +103,28 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition: all 0.1s ease;
+  touch-action: manipulation;
 }
 
-.touch-action-btn:active {
+.touch-action-btn:active,
+.touch-action-btn.active {
   background: var(--neon-pink);
   color: var(--bg-dark);
   box-shadow: var(--glow-pink);
-  transform: scale(0.95);
+  transform: scale(0.92);
+}
+
+/* Secondary action button different color */
+#btn-action2 {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+}
+
+#btn-action2:active,
+#btn-action2.active {
+  background: var(--neon-green);
+  color: var(--bg-dark);
+  box-shadow: 0 0 20px var(--neon-green);
 }
 
 /* Pause/Menu Button */
@@ -114,7 +135,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(26, 26, 46, 0.8);
+  background: rgba(26, 26, 46, 0.85);
   border: 2px solid var(--neon-yellow);
   color: var(--neon-yellow);
   font-family: "Press Start 2P", monospace;
@@ -126,12 +147,11 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   z-index: 51;
+  touch-action: manipulation;
 }
 
-@media (max-width: 768px), (pointer: coarse) {
-  .touch-pause.active {
-    display: flex;
-  }
+.touch-pause.active {
+  display: flex;
 }
 
 .touch-pause:active {
@@ -140,10 +160,25 @@
   transform: scale(0.95);
 }
 
-/* Control hints */
+/* Touch hint text */
+.touch-hint {
+  position: absolute;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+/* Control hints for desktop */
 .control-hints {
   position: absolute;
-  bottom: 220px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 10px;
@@ -159,8 +194,8 @@
 }
 
 @media (max-width: 768px), (pointer: coarse) {
-  .control-hints::before {
-    content: "Use on-screen controls";
+  .control-hints {
+    display: none;
   }
 }
 
@@ -186,4 +221,83 @@
     opacity: 0;
     transform: scale(1.5);
   }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+  .touch-dpad {
+    width: 120px;
+    height: 120px;
+    left: 10px;
+    bottom: 10px;
+  }
+
+  .touch-btn {
+    font-size: 14px;
+    border-radius: 6px;
+  }
+
+  .touch-actions {
+    right: 10px;
+    bottom: 10px;
+    gap: 10px;
+  }
+
+  .touch-action-btn {
+    width: 55px;
+    height: 55px;
+    font-size: 11px;
+  }
+
+  .touch-pause {
+    width: 40px;
+    height: 40px;
+    font-size: 10px;
+  }
+
+  .touch-hint {
+    bottom: 140px;
+    font-size: 8px;
+  }
+
+  #touch-controls {
+    height: 160px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  #touch-controls {
+    height: 120px;
+  }
+
+  .touch-dpad {
+    width: 100px;
+    height: 100px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .touch-btn {
+    font-size: 12px;
+  }
+
+  .touch-actions {
+    bottom: 10px;
+  }
+
+  .touch-action-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 10px;
+  }
+
+  .touch-hint {
+    display: none;
+  }
+}
+
+/* Ensure canvas is touch-friendly for tap games */
+#game-canvas {
+  touch-action: manipulation;
 }
