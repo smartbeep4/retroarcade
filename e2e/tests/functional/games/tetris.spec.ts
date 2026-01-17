@@ -36,7 +36,7 @@ test.describe("Tetris Functional Tests", () => {
       const initialPos = await tetris.getPiecePosition();
 
       // Hold left to move piece
-      await tetris.keyboard.holdFor("ArrowLeft", 150);
+      await tetris.keyboard.holdFor("ArrowLeft", 300);
       await tetris.page.waitForTimeout(100);
 
       const newPos = await tetris.getPiecePosition();
@@ -47,7 +47,7 @@ test.describe("Tetris Functional Tests", () => {
       const initialPos = await tetris.getPiecePosition();
 
       // Hold right to move piece
-      await tetris.keyboard.holdFor("ArrowRight", 150);
+      await tetris.keyboard.holdFor("ArrowRight", 300);
       await tetris.page.waitForTimeout(100);
 
       const newPos = await tetris.getPiecePosition();
@@ -58,7 +58,7 @@ test.describe("Tetris Functional Tests", () => {
       const initialPos = await tetris.getPiecePosition();
 
       // Hold down to soft drop
-      await tetris.keyboard.holdFor("ArrowDown", 150);
+      await tetris.keyboard.holdFor("ArrowDown", 300);
       await tetris.page.waitForTimeout(100);
 
       const newPos = await tetris.getPiecePosition();

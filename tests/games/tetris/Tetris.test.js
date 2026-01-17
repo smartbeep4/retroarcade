@@ -313,8 +313,14 @@ describe("Tetris", () => {
     });
 
     it("detects when piece is on ground", () => {
-      // Move piece to bottom
+      // Use a 2-row piece (T shape) for consistent testing
+      game.currentPiece.shape = [
+        [0, 1, 0],
+        [1, 1, 1],
+      ];
+      // Move piece to bottom (piece is 2 rows, so y=rows-2 means bottom row is at rows-1)
       game.currentPiece.y = game.rows - 2;
+      // isOnGround checks collision at y+1, which would put bottom row at rows (out of bounds)
       expect(game.isOnGround()).toBe(true);
     });
 
@@ -519,11 +525,16 @@ describe("Tetris", () => {
     });
 
     it("locks piece after drop", () => {
-      const pieceType = game.currentPiece.type;
+      // Position piece at top
       game.currentPiece.y = 0;
+      const initialY = game.currentPiece.y;
       game.hardDrop();
-      // Should have spawned new piece
-      expect(game.currentPiece.type).not.toBe(pieceType);
+      // Should have spawned new piece (y resets to 0 for new piece)
+      // and previous piece should be locked in grid
+      expect(game.currentPiece.y).toBe(0);
+      // Verify grid has at least one filled cell (piece was locked)
+      const hasLockedCells = game.grid.some((row) => row.some((cell) => cell !== null));
+      expect(hasLockedCells).toBe(true);
     });
   });
 
@@ -655,13 +666,15 @@ describe("Tetris", () => {
         game.moveDown();
       }
 
-      const pieceType = game.currentPiece.type;
+      const pieceY = game.currentPiece.y;
 
       // Simulate lock delay
       game.update(500);
 
-      // Should have spawned new piece
-      expect(game.currentPiece.type).not.toBe(pieceType);
+      // Should have spawned new piece at top (y=0)
+      // Note: piece type might be the same due to randomness
+      expect(game.currentPiece.y).toBe(0);
+      expect(pieceY).toBeGreaterThan(0); // Original piece was at bottom
     });
 
     it("resets lock timer when not on ground", () => {

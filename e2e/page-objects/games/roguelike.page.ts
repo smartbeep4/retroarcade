@@ -109,7 +109,7 @@ export class RoguelikePage extends GamePage {
     direction: "up" | "down" | "left" | "right",
   ): Promise<void> {
     await this.move(direction);
-    await this.page.waitForTimeout(100);
+    await this.page.waitForTimeout(200);
   }
 
   /**

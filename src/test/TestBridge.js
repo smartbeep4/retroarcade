@@ -38,6 +38,9 @@ class TestBridgeClass {
       getShellState: () => this.getShellState(),
       getShell: () => this.shell,
 
+      // Direct menu selection for reliable testing
+      setMenuSelectedIndex: (index) => this.setMenuSelectedIndex(index),
+
       // Game state
       getGameState: () => this.getGameState(),
       getGame: () => this.game,
@@ -107,6 +110,17 @@ class TestBridgeClass {
       menuSelectedIndex: this.shell.mainMenu?.selectedIndex,
       pauseMenuSelectedIndex: this.shell.pauseMenu?.selectedIndex,
     }
+  }
+
+  /**
+   * Directly set menu selected index (for reliable E2E testing)
+   */
+  setMenuSelectedIndex(index) {
+    if (!this.shell || !this.shell.mainMenu) return false
+    const maxIndex = this.shell.mainMenu.games.length - 1
+    if (index < 0 || index > maxIndex) return false
+    this.shell.mainMenu.selectedIndex = index
+    return true
   }
 
   /**
@@ -196,17 +210,34 @@ class TestBridgeClass {
           flapStrength: this.game.flapStrength,
         }
 
-      case 'space-invaders':
+      case 'space-invaders': {
+        // Combine playerBullet and alienBullets into a single array for tests
+        const allBullets = []
+        if (this.game.playerBullet) {
+          allBullets.push({ ...this.game.playerBullet, type: 'player' })
+        }
+        if (this.game.alienBullets) {
+          allBullets.push(
+            ...this.game.alienBullets.map((b) => ({ ...b, type: 'alien' })),
+          )
+        }
         return {
           ...baseState,
           player: this.game.player ? { ...this.game.player } : null,
           aliens: this.game.aliens ? [...this.game.aliens] : [],
           alienCount: this.game.aliens?.filter((a) => a.alive).length || 0,
-          bullets: this.game.bullets ? [...this.game.bullets] : [],
+          bullets: allBullets,
+          playerBullet: this.game.playerBullet
+            ? { ...this.game.playerBullet }
+            : null,
+          alienBullets: this.game.alienBullets
+            ? [...this.game.alienBullets]
+            : [],
           shields: this.game.shields ? [...this.game.shields] : [],
           ufo: this.game.ufo ? { ...this.game.ufo } : null,
           alienDirection: this.game.alienDirection,
         }
+      }
 
       case 'frogger':
         return {

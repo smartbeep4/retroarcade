@@ -65,7 +65,7 @@ test.describe("Asteroids Functional Tests", () => {
       await asteroids.waitFrames(5);
 
       const bullets = await asteroids.getBulletCount();
-      expect(bullets).toBeGreaterThanOrEqual(0);
+      expect(bullets).toBeGreaterThan(0);
     });
   });
 

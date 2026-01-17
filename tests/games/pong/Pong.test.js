@@ -234,6 +234,7 @@ describe("Pong", () => {
     it("AI moves paddle toward ball when ball is above", () => {
       game.ball.y = 100;
       game.paddle2.y = 300;
+      game.aiDifficulty = "hard"; // 100% reaction chance
       game.updateAI();
       expect(game.paddle2.y).toBeLessThan(300);
     });
@@ -241,6 +242,7 @@ describe("Pong", () => {
     it("AI moves paddle toward ball when ball is below", () => {
       game.ball.y = 500;
       game.paddle2.y = 200;
+      game.aiDifficulty = "hard"; // 100% reaction chance
       game.updateAI();
       expect(game.paddle2.y).toBeGreaterThan(200);
     });

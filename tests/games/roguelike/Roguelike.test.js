@@ -505,20 +505,32 @@ describe("Roguelike", () => {
     });
 
     it("should clear visibility before recalculating", () => {
+      // First update visibility normally
       game.updateVisibility();
-      const firstVisible = game.visible.map((row) => [...row]);
 
-      // Move player (if possible)
-      const newX = game.player.x + 1;
-      const newY = game.player.y;
-      if (game.canWalk(newX, newY)) {
-        game.player.x = newX;
-        game.player.y = newY;
-        game.updateVisibility();
-
-        // Some tiles should be different
-        expect(game.visible).not.toEqual(firstVisible);
+      // Verify some tiles are visible after update
+      let hasVisibleTile = false;
+      for (let y = 0; y < game.mapHeight && !hasVisibleTile; y++) {
+        for (let x = 0; x < game.mapWidth && !hasVisibleTile; x++) {
+          if (game.visible[y][x]) hasVisibleTile = true;
+        }
       }
+      expect(hasVisibleTile).toBe(true);
+
+      // Manually set all visibility to true to test clearing
+      for (let y = 0; y < game.mapHeight; y++) {
+        for (let x = 0; x < game.mapWidth; x++) {
+          game.visible[y][x] = true;
+        }
+      }
+
+      // After updateVisibility, tiles outside view radius should be cleared
+      game.updateVisibility();
+
+      // Tiles far from player should not be visible (verifies clearing worked)
+      const farX = Math.min(game.player.x + game.viewRadius + 2, game.mapWidth - 1);
+      const farY = Math.min(game.player.y + game.viewRadius + 2, game.mapHeight - 1);
+      expect(game.visible[farY][farX]).toBe(false);
     });
 
     it("should have limited view radius", () => {

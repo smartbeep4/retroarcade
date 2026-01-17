@@ -13,6 +13,10 @@ vi.mock("../../src/arcade/InputManager.js", () => ({
     update: vi.fn(),
     isJustPressed: vi.fn(() => false),
     isPressed: vi.fn(() => false),
+    getMousePosition: vi.fn(() => null),
+    isMouseJustClicked: vi.fn(() => false),
+    isMouseDown: vi.fn(() => false),
+    getTapPosition: vi.fn(() => null),
   },
 }));
 
@@ -57,6 +61,14 @@ vi.mock("../../src/arcade/GameLoader.js", () => ({
     loadGame: vi.fn(),
     setCurrentGame: vi.fn(),
     unloadGame: vi.fn(),
+  },
+}));
+
+vi.mock("../../src/arcade/TouchControls.js", () => ({
+  TouchControls: {
+    init: vi.fn(),
+    configureForGame: vi.fn(),
+    hide: vi.fn(),
   },
 }));
 

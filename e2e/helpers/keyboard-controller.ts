@@ -40,7 +40,8 @@ export class KeyboardController {
    */
   async press(key: string): Promise<void> {
     await this.dispatchKeyEvent("keydown", key);
-    await this.page.waitForTimeout(50);
+    // Wait long enough for at least one frame to process the key
+    await this.page.waitForTimeout(80);
     await this.dispatchKeyEvent("keyup", key);
   }
 

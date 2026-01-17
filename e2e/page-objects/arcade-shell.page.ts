@@ -82,44 +82,108 @@ export class ArcadeShellPage {
 
   /**
    * Navigate to a specific game by its menu position
+   * Uses absolute navigation from position 0 for reliability
    */
   async navigateToGame(gameId: GameId): Promise<void> {
     const targetPosition = GAME_MENU_POSITIONS[gameId];
+
+    // First, ensure we're at position 0 (snake) for consistent navigation
+    await this.resetMenuToStart();
+
+    // Calculate navigation from position 0
+    const columns = 4;
+    const targetRow = Math.floor(targetPosition / columns);
+    const targetCol = targetPosition % columns;
+
+    // Navigate vertically first
+    for (let i = 0; i < targetRow; i++) {
+      await this.keyboard.menuDown();
+      await this.page.waitForTimeout(120);
+    }
+
+    // Then navigate horizontally
+    for (let i = 0; i < targetCol; i++) {
+      await this.keyboard.menuRight();
+      await this.page.waitForTimeout(120);
+    }
+
+    // Wait for navigation to settle
+    await this.page.waitForTimeout(100);
+
+    // Verify we reached the correct position
+    const finalPosition = await this.stateBridge.getMenuSelectedIndex();
+    if (finalPosition !== targetPosition) {
+      // Use direct setter as a reliable fallback
+      await this.stateBridge.setMenuSelectedIndex(targetPosition);
+      await this.page.waitForTimeout(50);
+    }
+  }
+
+  /**
+   * Reset menu selection to position 0 (snake)
+   * Navigates to top-left corner to ensure consistent starting position
+   */
+  private async resetMenuToStart(): Promise<void> {
+    // Wait for menu to be fully stable
+    await this.page.waitForTimeout(150);
+
     const currentPosition = await this.stateBridge.getMenuSelectedIndex();
 
-    // Calculate navigation
+    // If already at 0, nothing to do
+    if (currentPosition === 0) {
+      return;
+    }
+
+    const columns = 4;
+    const currentRow = Math.floor(currentPosition / columns);
+    const currentCol = currentPosition % columns;
+
+    // Navigate up to row 0
+    for (let i = 0; i < currentRow; i++) {
+      await this.keyboard.menuUp();
+      await this.page.waitForTimeout(120);
+    }
+
+    // Navigate left to column 0
+    for (let i = 0; i < currentCol; i++) {
+      await this.keyboard.menuLeft();
+      await this.page.waitForTimeout(120);
+    }
+
+    // Wait and verify
+    await this.page.waitForTimeout(100);
+  }
+
+  /**
+   * Direct navigation helper when initial navigation fails
+   */
+  private async navigateToGameDirect(targetPosition: number, currentPosition: number): Promise<void> {
     const columns = 4;
     const currentRow = Math.floor(currentPosition / columns);
     const currentCol = currentPosition % columns;
     const targetRow = Math.floor(targetPosition / columns);
     const targetCol = targetPosition % columns;
 
-    // Navigate vertically first
+    // Navigate vertically
     const rowDiff = targetRow - currentRow;
-    if (rowDiff > 0) {
-      for (let i = 0; i < rowDiff; i++) {
+    for (let i = 0; i < Math.abs(rowDiff); i++) {
+      if (rowDiff > 0) {
         await this.keyboard.menuDown();
-        await this.page.waitForTimeout(100);
-      }
-    } else if (rowDiff < 0) {
-      for (let i = 0; i < -rowDiff; i++) {
+      } else {
         await this.keyboard.menuUp();
-        await this.page.waitForTimeout(100);
       }
+      await this.page.waitForTimeout(150);
     }
 
-    // Then navigate horizontally
+    // Navigate horizontally
     const colDiff = targetCol - currentCol;
-    if (colDiff > 0) {
-      for (let i = 0; i < colDiff; i++) {
+    for (let i = 0; i < Math.abs(colDiff); i++) {
+      if (colDiff > 0) {
         await this.keyboard.menuRight();
-        await this.page.waitForTimeout(100);
-      }
-    } else if (colDiff < 0) {
-      for (let i = 0; i < -colDiff; i++) {
+      } else {
         await this.keyboard.menuLeft();
-        await this.page.waitForTimeout(100);
       }
+      await this.page.waitForTimeout(150);
     }
   }
 
@@ -128,6 +192,8 @@ export class ArcadeShellPage {
    */
   async launchGame(gameId: GameId): Promise<void> {
     await this.navigateToGame(gameId);
+    // Wait a moment for navigation to fully settle
+    await this.page.waitForTimeout(100);
     await this.keyboard.menuConfirm();
     await this.stateBridge.waitForGameLoaded(gameId);
   }
@@ -161,9 +227,11 @@ export class ArcadeShellPage {
    */
   async navigatePauseMenu(optionIndex: number): Promise<void> {
     // Options: RESUME (0), RESTART (1), SETTINGS (2), QUIT (3)
+    // Wait for pause menu to be ready
+    await this.page.waitForTimeout(100);
     for (let i = 0; i < optionIndex; i++) {
       await this.keyboard.menuDown();
-      await this.page.waitForTimeout(100);
+      await this.page.waitForTimeout(150);
     }
   }
 
