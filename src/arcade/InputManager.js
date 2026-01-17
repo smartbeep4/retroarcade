@@ -23,6 +23,7 @@ const state = {
 
 // Keyboard state
 const keysHeld = new Set()
+const keysPressedSinceUpdate = new Set() // Track keys pressed since last update (for E2E tests)
 const keyMap = {
   ArrowUp: UP,
   w: UP,
@@ -113,6 +114,7 @@ function initKeyboard() {
     const mapped = keyMap[e.key]
     if (mapped) {
       keysHeld.add(e.key)
+      keysPressedSinceUpdate.add(e.key) // Track for short presses that might be missed
       e.preventDefault()
     }
   }
@@ -362,12 +364,22 @@ function update() {
  * Poll keyboard state
  */
 function pollKeyboard() {
+  // Include keys that are currently held
   for (const key of keysHeld) {
     const mapped = keyMap[key]
     if (mapped) {
       state.current[mapped] = true
     }
   }
+  // Also include keys that were pressed since last update (catches short presses)
+  for (const key of keysPressedSinceUpdate) {
+    const mapped = keyMap[key]
+    if (mapped) {
+      state.current[mapped] = true
+    }
+  }
+  // Clear the pressed-since-update set for next frame
+  keysPressedSinceUpdate.clear()
 }
 
 /**
@@ -597,6 +609,7 @@ function destroy() {
 
   // Clear state
   keysHeld.clear()
+  keysPressedSinceUpdate.clear()
   state.current = {}
   state.previous = {}
   state.direction = { x: 0, y: 0 }

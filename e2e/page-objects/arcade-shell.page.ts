@@ -85,6 +85,9 @@ export class ArcadeShellPage {
    */
   async navigateToGame(gameId: GameId): Promise<void> {
     const targetPosition = GAME_MENU_POSITIONS[gameId];
+
+    // Wait for menu state to be ready and get current position
+    await this.page.waitForTimeout(100);
     const currentPosition = await this.stateBridge.getMenuSelectedIndex();
 
     // Calculate navigation
@@ -99,12 +102,12 @@ export class ArcadeShellPage {
     if (rowDiff > 0) {
       for (let i = 0; i < rowDiff; i++) {
         await this.keyboard.menuDown();
-        await this.page.waitForTimeout(100);
+        await this.page.waitForTimeout(150);
       }
     } else if (rowDiff < 0) {
       for (let i = 0; i < -rowDiff; i++) {
         await this.keyboard.menuUp();
-        await this.page.waitForTimeout(100);
+        await this.page.waitForTimeout(150);
       }
     }
 
@@ -113,13 +116,54 @@ export class ArcadeShellPage {
     if (colDiff > 0) {
       for (let i = 0; i < colDiff; i++) {
         await this.keyboard.menuRight();
-        await this.page.waitForTimeout(100);
+        await this.page.waitForTimeout(150);
       }
     } else if (colDiff < 0) {
       for (let i = 0; i < -colDiff; i++) {
         await this.keyboard.menuLeft();
-        await this.page.waitForTimeout(100);
+        await this.page.waitForTimeout(150);
       }
+    }
+
+    // Verify we reached the correct position
+    await this.page.waitForTimeout(100);
+    const finalPosition = await this.stateBridge.getMenuSelectedIndex();
+    if (finalPosition !== targetPosition) {
+      // Retry navigation if position doesn't match
+      await this.navigateToGameDirect(targetPosition, finalPosition);
+    }
+  }
+
+  /**
+   * Direct navigation helper when initial navigation fails
+   */
+  private async navigateToGameDirect(targetPosition: number, currentPosition: number): Promise<void> {
+    const columns = 4;
+    const currentRow = Math.floor(currentPosition / columns);
+    const currentCol = currentPosition % columns;
+    const targetRow = Math.floor(targetPosition / columns);
+    const targetCol = targetPosition % columns;
+
+    // Navigate vertically
+    const rowDiff = targetRow - currentRow;
+    for (let i = 0; i < Math.abs(rowDiff); i++) {
+      if (rowDiff > 0) {
+        await this.keyboard.menuDown();
+      } else {
+        await this.keyboard.menuUp();
+      }
+      await this.page.waitForTimeout(200);
+    }
+
+    // Navigate horizontally
+    const colDiff = targetCol - currentCol;
+    for (let i = 0; i < Math.abs(colDiff); i++) {
+      if (colDiff > 0) {
+        await this.keyboard.menuRight();
+      } else {
+        await this.keyboard.menuLeft();
+      }
+      await this.page.waitForTimeout(200);
     }
   }
 
@@ -128,6 +172,8 @@ export class ArcadeShellPage {
    */
   async launchGame(gameId: GameId): Promise<void> {
     await this.navigateToGame(gameId);
+    // Wait a moment for navigation to fully settle
+    await this.page.waitForTimeout(100);
     await this.keyboard.menuConfirm();
     await this.stateBridge.waitForGameLoaded(gameId);
   }
@@ -161,9 +207,11 @@ export class ArcadeShellPage {
    */
   async navigatePauseMenu(optionIndex: number): Promise<void> {
     // Options: RESUME (0), RESTART (1), SETTINGS (2), QUIT (3)
+    // Wait for pause menu to be ready
+    await this.page.waitForTimeout(100);
     for (let i = 0; i < optionIndex; i++) {
       await this.keyboard.menuDown();
-      await this.page.waitForTimeout(100);
+      await this.page.waitForTimeout(150);
     }
   }
 

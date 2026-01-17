@@ -816,6 +816,7 @@ export class ArcadeShell {
   showMainMenu() {
     this.unloadGame()
     this.state = 'menu'
+    this.mainMenu.selectedIndex = 0 // Reset menu selection for clean state
   }
 
   showSettings() {
