@@ -1,13 +1,8 @@
 name: Security
 
 on:
-  push:
-    branches: [main, master]
   pull_request:
     branches: [main, master]
-  schedule:
-    # Run weekly on Sundays at midnight
-    - cron: "0 0 * * 0"
 
 jobs:
   codeql:
