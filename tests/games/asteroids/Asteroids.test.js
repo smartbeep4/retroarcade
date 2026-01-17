@@ -620,7 +620,6 @@ describe('Asteroids', () => {
 
     it('UFO changes direction periodically', () => {
       game.spawnUFO()
-      const initialVy = game.ufo.vy
       game.ufo.directionTimer = 0
       game.updateUFO(16)
       // vy should change (may be same by chance, but directionTimer should reset)
