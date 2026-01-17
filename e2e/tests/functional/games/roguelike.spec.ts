@@ -36,8 +36,6 @@ test.describe('Roguelike Functional Tests', () => {
 
   test.describe('Movement (Turn-based)', () => {
     test('should move up', async () => {
-      const initialPos = await roguelike.getPlayerPosition()
-
       await roguelike.moveAndWait('up')
 
       // Position should change or game should still be running
