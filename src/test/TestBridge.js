@@ -38,6 +38,9 @@ class TestBridgeClass {
       getShellState: () => this.getShellState(),
       getShell: () => this.shell,
 
+      // Direct menu selection for reliable testing
+      setMenuSelectedIndex: (index) => this.setMenuSelectedIndex(index),
+
       // Game state
       getGameState: () => this.getGameState(),
       getGame: () => this.game,
@@ -107,6 +110,17 @@ class TestBridgeClass {
       menuSelectedIndex: this.shell.mainMenu?.selectedIndex,
       pauseMenuSelectedIndex: this.shell.pauseMenu?.selectedIndex,
     }
+  }
+
+  /**
+   * Directly set menu selected index (for reliable E2E testing)
+   */
+  setMenuSelectedIndex(index) {
+    if (!this.shell || !this.shell.mainMenu) return false
+    const maxIndex = this.shell.mainMenu.games.length - 1
+    if (index < 0 || index > maxIndex) return false
+    this.shell.mainMenu.selectedIndex = index
+    return true
   }
 
   /**

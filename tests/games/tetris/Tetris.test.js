@@ -313,8 +313,14 @@ describe("Tetris", () => {
     });
 
     it("detects when piece is on ground", () => {
-      // Move piece to bottom
+      // Use a 2-row piece (T shape) for consistent testing
+      game.currentPiece.shape = [
+        [0, 1, 0],
+        [1, 1, 1],
+      ];
+      // Move piece to bottom (piece is 2 rows, so y=rows-2 means bottom row is at rows-1)
       game.currentPiece.y = game.rows - 2;
+      // isOnGround checks collision at y+1, which would put bottom row at rows (out of bounds)
       expect(game.isOnGround()).toBe(true);
     });
 

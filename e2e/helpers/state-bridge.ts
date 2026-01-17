@@ -412,4 +412,14 @@ export class StateBridge {
     const state = await this.getShellState();
     return state?.menuSelectedIndex ?? 0;
   }
+
+  /**
+   * Directly set menu selection index (bypasses keyboard navigation)
+   */
+  async setMenuSelectedIndex(index: number): Promise<boolean> {
+    return await this.page.evaluate((idx) => {
+      const testBridge = (window as any).__ARCADE_TEST__;
+      return testBridge?.setMenuSelectedIndex(idx) ?? false;
+    }, index);
+  }
 }

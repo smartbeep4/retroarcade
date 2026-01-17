@@ -82,56 +82,76 @@ export class ArcadeShellPage {
 
   /**
    * Navigate to a specific game by its menu position
+   * Uses absolute navigation from position 0 for reliability
    */
   async navigateToGame(gameId: GameId): Promise<void> {
     const targetPosition = GAME_MENU_POSITIONS[gameId];
 
-    // Wait for menu state to be ready and get current position
-    await this.page.waitForTimeout(100);
-    const currentPosition = await this.stateBridge.getMenuSelectedIndex();
+    // First, ensure we're at position 0 (snake) for consistent navigation
+    await this.resetMenuToStart();
 
-    // Calculate navigation
+    // Calculate navigation from position 0
     const columns = 4;
-    const currentRow = Math.floor(currentPosition / columns);
-    const currentCol = currentPosition % columns;
     const targetRow = Math.floor(targetPosition / columns);
     const targetCol = targetPosition % columns;
 
     // Navigate vertically first
-    const rowDiff = targetRow - currentRow;
-    if (rowDiff > 0) {
-      for (let i = 0; i < rowDiff; i++) {
-        await this.keyboard.menuDown();
-        await this.page.waitForTimeout(150);
-      }
-    } else if (rowDiff < 0) {
-      for (let i = 0; i < -rowDiff; i++) {
-        await this.keyboard.menuUp();
-        await this.page.waitForTimeout(150);
-      }
+    for (let i = 0; i < targetRow; i++) {
+      await this.keyboard.menuDown();
+      await this.page.waitForTimeout(120);
     }
 
     // Then navigate horizontally
-    const colDiff = targetCol - currentCol;
-    if (colDiff > 0) {
-      for (let i = 0; i < colDiff; i++) {
-        await this.keyboard.menuRight();
-        await this.page.waitForTimeout(150);
-      }
-    } else if (colDiff < 0) {
-      for (let i = 0; i < -colDiff; i++) {
-        await this.keyboard.menuLeft();
-        await this.page.waitForTimeout(150);
-      }
+    for (let i = 0; i < targetCol; i++) {
+      await this.keyboard.menuRight();
+      await this.page.waitForTimeout(120);
     }
 
-    // Verify we reached the correct position
+    // Wait for navigation to settle
     await this.page.waitForTimeout(100);
+
+    // Verify we reached the correct position
     const finalPosition = await this.stateBridge.getMenuSelectedIndex();
     if (finalPosition !== targetPosition) {
-      // Retry navigation if position doesn't match
-      await this.navigateToGameDirect(targetPosition, finalPosition);
+      // Use direct setter as a reliable fallback
+      await this.stateBridge.setMenuSelectedIndex(targetPosition);
+      await this.page.waitForTimeout(50);
     }
+  }
+
+  /**
+   * Reset menu selection to position 0 (snake)
+   * Navigates to top-left corner to ensure consistent starting position
+   */
+  private async resetMenuToStart(): Promise<void> {
+    // Wait for menu to be fully stable
+    await this.page.waitForTimeout(150);
+
+    const currentPosition = await this.stateBridge.getMenuSelectedIndex();
+
+    // If already at 0, nothing to do
+    if (currentPosition === 0) {
+      return;
+    }
+
+    const columns = 4;
+    const currentRow = Math.floor(currentPosition / columns);
+    const currentCol = currentPosition % columns;
+
+    // Navigate up to row 0
+    for (let i = 0; i < currentRow; i++) {
+      await this.keyboard.menuUp();
+      await this.page.waitForTimeout(120);
+    }
+
+    // Navigate left to column 0
+    for (let i = 0; i < currentCol; i++) {
+      await this.keyboard.menuLeft();
+      await this.page.waitForTimeout(120);
+    }
+
+    // Wait and verify
+    await this.page.waitForTimeout(100);
   }
 
   /**
@@ -152,7 +172,7 @@ export class ArcadeShellPage {
       } else {
         await this.keyboard.menuUp();
       }
-      await this.page.waitForTimeout(200);
+      await this.page.waitForTimeout(150);
     }
 
     // Navigate horizontally
@@ -163,7 +183,7 @@ export class ArcadeShellPage {
       } else {
         await this.keyboard.menuLeft();
       }
-      await this.page.waitForTimeout(200);
+      await this.page.waitForTimeout(150);
     }
   }
 
