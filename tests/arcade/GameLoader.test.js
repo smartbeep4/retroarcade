@@ -83,7 +83,6 @@ describe('GameLoader', () => {
 
     it('stores game ID when load is initiated', async () => {
       // Create a mock game module
-      const mockGamePath = '/mnt/c/Users/simon/Code/retroarcade/src/games/test-game/index.js'
       const MockGame = class {
         constructor() {
           this.name = 'Test Game'
