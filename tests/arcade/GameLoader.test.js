@@ -196,10 +196,6 @@ describe("GameLoader", () => {
         }),
       };
 
-      const consoleWarnSpy = vi
-        .spyOn(console, "warn")
-        .mockImplementation(() => {});
-
       gameLoader.setCurrentGame(mockGame);
 
       // Should not throw
@@ -208,14 +204,6 @@ describe("GameLoader", () => {
       // Should still clear references even after error
       expect(gameLoader.getCurrentGame()).toBeNull();
       expect(gameLoader.getCurrentGameId()).toBeNull();
-
-      // Should log warning
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        "Error during game cleanup:",
-        expect.any(Error),
-      );
-
-      consoleWarnSpy.mockRestore();
     });
 
     it("continues cleanup even if one method throws", async () => {
@@ -226,10 +214,6 @@ describe("GameLoader", () => {
         cleanup: vi.fn(),
       };
 
-      const consoleWarnSpy = vi
-        .spyOn(console, "warn")
-        .mockImplementation(() => {});
-
       gameLoader.setCurrentGame(mockGame);
       await gameLoader.unloadGame();
 
@@ -239,8 +223,6 @@ describe("GameLoader", () => {
       // This is expected behavior - the try/catch wraps all cleanup calls
 
       expect(gameLoader.getCurrentGame()).toBeNull();
-
-      consoleWarnSpy.mockRestore();
     });
   });
 

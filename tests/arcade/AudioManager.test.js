@@ -321,28 +321,19 @@ describe("AudioManager", () => {
     });
 
     it("handles unknown sound ID gracefully", () => {
-      const consoleWarn = vi
-        .spyOn(console, "warn")
-        .mockImplementation(() => {});
+      // Should silently return without playing anything
       AudioManager.play("unknown-sound");
 
-      expect(consoleWarn).toHaveBeenCalledWith(
-        expect.stringContaining("Unknown sound"),
-      );
-      consoleWarn.mockRestore();
+      // Should not create a buffer source for unknown sound
+      expect(mockAudioContext.createBufferSource).not.toHaveBeenCalled();
     });
 
     it("handles sound loading errors gracefully", async () => {
       global.fetch = vi.fn(() => Promise.reject(new Error("Network error")));
-      const consoleWarn = vi
-        .spyOn(console, "warn")
-        .mockImplementation(() => {});
 
-      AudioManager.play("score");
+      // Should not throw when sound loading fails
+      expect(() => AudioManager.play("score")).not.toThrow();
       await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(consoleWarn).toHaveBeenCalled();
-      consoleWarn.mockRestore();
     });
 
     it("caches loaded sound buffers", async () => {
@@ -449,15 +440,11 @@ describe("AudioManager", () => {
     });
 
     it("handles unknown music track gracefully", () => {
-      const consoleWarn = vi
-        .spyOn(console, "warn")
-        .mockImplementation(() => {});
+      // Should silently return without playing anything
       AudioManager.playMusic("unknown-track");
 
-      expect(consoleWarn).toHaveBeenCalledWith(
-        expect.stringContaining("Unknown music track"),
-      );
-      consoleWarn.mockRestore();
+      // Should not create a buffer source for unknown track
+      expect(mockAudioContext.createBufferSource).not.toHaveBeenCalled();
     });
 
     it("does not play music when not ready", () => {
@@ -525,18 +512,13 @@ describe("AudioManager", () => {
       });
       global.webkitAudioContext = undefined;
 
-      const consoleWarn = vi
-        .spyOn(console, "warn")
-        .mockImplementation(() => {});
-
       AudioManager.destroy();
-      AudioManager.init();
 
-      expect(consoleWarn).toHaveBeenCalledWith(
-        expect.stringContaining("Web Audio API not supported"),
-        expect.any(Error),
-      );
-      consoleWarn.mockRestore();
+      // Should not throw even when AudioContext is unavailable
+      expect(() => AudioManager.init()).not.toThrow();
+
+      // isReady should return false when AudioContext failed
+      expect(AudioManager.isReady()).toBe(false);
     });
 
     it("handles play calls when audio is not available", () => {

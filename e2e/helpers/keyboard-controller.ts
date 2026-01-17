@@ -15,6 +15,21 @@ export class KeyboardController {
   }
 
   /**
+   * Map special key names to their actual key values
+   * The 'key' property should be the actual character/key, not the code
+   */
+  private static readonly keyNameToKeyValue: Record<string, string> = {
+    Space: " ",
+    Enter: "Enter",
+    Escape: "Escape",
+    ArrowUp: "ArrowUp",
+    ArrowDown: "ArrowDown",
+    ArrowLeft: "ArrowLeft",
+    ArrowRight: "ArrowRight",
+    Shift: "Shift",
+  };
+
+  /**
    * Dispatch a keyboard event on the window object
    */
   private async dispatchKeyEvent(
@@ -22,16 +37,19 @@ export class KeyboardController {
     key: string,
   ): Promise<void> {
     await this.page.evaluate(
-      ([eventType, eventKey]) => {
+      ([eventType, eventKey, keyNameMap]) => {
+        // Convert key name to actual key value (e.g., "Space" -> " ")
+        const actualKey =
+          (keyNameMap as Record<string, string>)[eventKey] || eventKey;
         const event = new KeyboardEvent(eventType, {
-          key: eventKey,
+          key: actualKey,
           code: eventKey,
           bubbles: true,
           cancelable: true,
         });
         window.dispatchEvent(event);
       },
-      [type, key],
+      [type, key, KeyboardController.keyNameToKeyValue],
     );
   }
 

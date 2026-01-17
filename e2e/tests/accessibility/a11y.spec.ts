@@ -40,9 +40,10 @@ test.describe("Accessibility Tests", () => {
       const title = await page.title();
       expect(title.length).toBeGreaterThan(0);
 
-      // Check for viewport meta tag
+      // Check for viewport meta tag (meta tags are in head, not visible)
       const viewport = await page.locator('meta[name="viewport"]');
-      await expect(viewport).toBeVisible();
+      await expect(viewport).toHaveCount(1);
+      await expect(viewport).toHaveAttribute("content", /width=device-width/);
     });
 
     test("main menu should be keyboard navigable", async ({ page }) => {
