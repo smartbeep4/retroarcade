@@ -525,11 +525,16 @@ describe("Tetris", () => {
     });
 
     it("locks piece after drop", () => {
-      const pieceType = game.currentPiece.type;
+      // Position piece at top
       game.currentPiece.y = 0;
+      const initialY = game.currentPiece.y;
       game.hardDrop();
-      // Should have spawned new piece
-      expect(game.currentPiece.type).not.toBe(pieceType);
+      // Should have spawned new piece (y resets to 0 for new piece)
+      // and previous piece should be locked in grid
+      expect(game.currentPiece.y).toBe(0);
+      // Verify grid has at least one filled cell (piece was locked)
+      const hasLockedCells = game.grid.some((row) => row.some((cell) => cell !== null));
+      expect(hasLockedCells).toBe(true);
     });
   });
 

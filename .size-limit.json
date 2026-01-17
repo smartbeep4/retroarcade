@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Total bundle",
+    "path": "dist/**/*.js",
+    "limit": "500 KB"
+  },
+  {
+    "name": "Main entry",
+    "path": "dist/index.html",
+    "limit": "10 KB"
+  },
+  {
+    "name": "JavaScript assets",
+    "path": "dist/assets/*.js",
+    "limit": "400 KB"
+  },
+  {
+    "name": "CSS assets",
+    "path": "dist/assets/*.css",
+    "limit": "50 KB"
+  }
+]

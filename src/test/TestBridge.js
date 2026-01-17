@@ -210,7 +210,7 @@ class TestBridgeClass {
           flapStrength: this.game.flapStrength,
         }
 
-      case 'space-invaders':
+      case 'space-invaders': {
         // Combine playerBullet and alienBullets into a single array for tests
         const allBullets = []
         if (this.game.playerBullet) {
@@ -237,6 +237,7 @@ class TestBridgeClass {
           ufo: this.game.ufo ? { ...this.game.ufo } : null,
           alienDirection: this.game.alienDirection,
         }
+      }
 
       case 'frogger':
         return {
