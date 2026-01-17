@@ -91,7 +91,7 @@ function init() {
     // Set up unlock listeners for user gestures
     setupUnlockListeners()
   } catch (e) {
-    // console.warn("Web Audio API not supported:", e);
+    console.warn("Web Audio API not supported:", e);
   }
 }
 
@@ -151,7 +151,7 @@ async function loadSound(soundId) {
 
   const config = SOUNDS[soundId]
   if (!config) {
-    // console.warn(`Unknown sound: ${soundId}`);
+    console.warn(`Unknown sound: ${soundId}`);
     return null
   }
 
@@ -162,7 +162,7 @@ async function loadSound(soundId) {
     bufferCache.set(soundId, audioBuffer)
     return audioBuffer
   } catch (e) {
-    // console.warn(`Failed to load sound: ${soundId}`, e);
+    console.warn(`Failed to load sound: ${soundId}`, e);
     return null
   }
 }
@@ -181,7 +181,7 @@ function play(soundId, options = {}) {
 
   const config = SOUNDS[soundId]
   if (!config) {
-    // console.warn(`Unknown sound: ${soundId}`);
+    console.warn(`Unknown sound: ${soundId}`);
     return
   }
 
@@ -212,8 +212,8 @@ function play(soundId, options = {}) {
       // Return source for manual control if needed
       return source
     })
-    .catch(() => {
-      // console.warn(`Error playing sound ${soundId}:`, e);
+    .catch((e) => {
+      console.warn(`Error playing sound ${soundId}:`, e);
     })
 }
 
@@ -236,7 +236,7 @@ function playMusic(trackId, loop = true) {
 
   const config = SOUNDS[trackId]
   if (!config || !config.isMusic) {
-    // console.warn(`Unknown music track: ${trackId}`);
+    console.warn(`Unknown music track: ${trackId}`);
     return
   }
 
@@ -263,8 +263,8 @@ function playMusic(trackId, loop = true) {
       currentMusicId = trackId
       isPaused = false
     })
-    .catch(() => {
-      // console.warn(`Error playing music ${trackId}:`, e);
+    .catch((e) => {
+      console.warn(`Error playing music ${trackId}:`, e);
     })
 }
 
@@ -314,7 +314,7 @@ function resumeMusic() {
 function setMusicTrack(trackId) {
   const config = SOUNDS[trackId]
   if (!config || !config.isMusic) {
-    // console.warn(`Unknown music track: ${trackId}`);
+    console.warn(`Unknown music track: ${trackId}`);
     return
   }
 

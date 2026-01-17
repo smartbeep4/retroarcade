@@ -597,6 +597,9 @@ describe("Frogger", () => {
     it("update handles all game logic", () => {
       const initialRow = game.frog.row;
       input.isJustPressed = vi.fn((key) => key === "up");
+      // Mock collision methods to prevent frog from dying during movement test
+      game.checkCollisions = vi.fn();
+      game.checkRiverInteraction = vi.fn();
       game.update(16);
       expect(game.frog.row).toBe(initialRow - 1);
       expect(game.timeRemaining).toBeLessThan(30);

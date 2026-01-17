@@ -655,13 +655,15 @@ describe("Tetris", () => {
         game.moveDown();
       }
 
-      const pieceType = game.currentPiece.type;
+      const pieceY = game.currentPiece.y;
 
       // Simulate lock delay
       game.update(500);
 
-      // Should have spawned new piece
-      expect(game.currentPiece.type).not.toBe(pieceType);
+      // Should have spawned new piece at top (y=0)
+      // Note: piece type might be the same due to randomness
+      expect(game.currentPiece.y).toBe(0);
+      expect(pieceY).toBeGreaterThan(0); // Original piece was at bottom
     });
 
     it("resets lock timer when not on ground", () => {

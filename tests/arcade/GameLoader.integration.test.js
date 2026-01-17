@@ -1,6 +1,39 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { GameLoader } from "../../src/arcade/GameLoader.js";
 
+// Helper to create mock canvas with context
+function createMockCanvas() {
+  const mockCanvas = document.createElement("canvas");
+  mockCanvas.width = 800;
+  mockCanvas.height = 600;
+  const mockCtx = {
+    fillStyle: "",
+    fillRect: () => {},
+    strokeStyle: "",
+    strokeRect: () => {},
+    beginPath: () => {},
+    moveTo: () => {},
+    lineTo: () => {},
+    closePath: () => {},
+    arc: () => {},
+    fill: () => {},
+    stroke: () => {},
+    clearRect: () => {},
+    save: () => {},
+    restore: () => {},
+    translate: () => {},
+    rotate: () => {},
+    scale: () => {},
+    font: "",
+    textAlign: "",
+    fillText: () => {},
+    shadowColor: "",
+    shadowBlur: 0,
+  };
+  mockCanvas.getContext = () => mockCtx;
+  return mockCanvas;
+}
+
 describe("GameLoader - Integration Tests", () => {
   let gameLoader;
 
@@ -25,8 +58,8 @@ describe("GameLoader - Integration Tests", () => {
       const GameClass = await gameLoader.loadGame("snake");
 
       // Create mock dependencies
-      const mockCanvas = document.createElement("canvas");
-      const mockInput = { update: () => {} };
+      const mockCanvas = createMockCanvas();
+      const mockInput = { update: () => {}, isJustPressed: () => false };
       const mockAudio = { play: () => {} };
 
       // Instantiate the game
@@ -34,7 +67,7 @@ describe("GameLoader - Integration Tests", () => {
       gameLoader.setCurrentGame(gameInstance);
 
       expect(gameInstance).toBeDefined();
-      expect(gameInstance.name).toBe("Snake");
+      expect(gameInstance.constructor.config.title).toBe("Snake");
       expect(gameInstance.score).toBe(0);
       expect(typeof gameInstance.init).toBe("function");
       expect(typeof gameInstance.start).toBe("function");
@@ -44,8 +77,8 @@ describe("GameLoader - Integration Tests", () => {
     it("initializes and runs loaded game", async () => {
       const GameClass = await gameLoader.loadGame("snake");
 
-      const mockCanvas = document.createElement("canvas");
-      const mockInput = { update: () => {} };
+      const mockCanvas = createMockCanvas();
+      const mockInput = { update: () => {}, isJustPressed: () => false };
       const mockAudio = { play: () => {} };
 
       const gameInstance = new GameClass(mockCanvas, mockInput, mockAudio);
@@ -54,14 +87,14 @@ describe("GameLoader - Integration Tests", () => {
       await gameInstance.init();
       gameInstance.start();
 
-      expect(gameInstance.isRunning).toBe(true);
+      expect(gameInstance.state).toBe("running");
     });
 
     it("properly cleans up loaded game", async () => {
       const GameClass = await gameLoader.loadGame("snake");
 
-      const mockCanvas = document.createElement("canvas");
-      const mockInput = { update: () => {} };
+      const mockCanvas = createMockCanvas();
+      const mockInput = { update: () => {}, isJustPressed: () => false };
       const mockAudio = { play: () => {} };
 
       const gameInstance = new GameClass(mockCanvas, mockInput, mockAudio);
@@ -70,7 +103,7 @@ describe("GameLoader - Integration Tests", () => {
       await gameInstance.init();
       gameInstance.start();
 
-      expect(gameInstance.isRunning).toBe(true);
+      expect(gameInstance.state).toBe("running");
 
       await gameLoader.unloadGame();
 
@@ -90,8 +123,8 @@ describe("GameLoader - Integration Tests", () => {
     it("loads multiple games sequentially", async () => {
       // Load first game
       const GameClass1 = await gameLoader.loadGame("snake");
-      const mockCanvas = document.createElement("canvas");
-      const mockInput = { update: () => {} };
+      const mockCanvas = createMockCanvas();
+      const mockInput = { update: () => {}, isJustPressed: () => false };
       const mockAudio = { play: () => {} };
 
       const game1 = new GameClass1(mockCanvas, mockInput, mockAudio);
@@ -114,10 +147,10 @@ describe("GameLoader - Integration Tests", () => {
   describe("error scenarios with real modules", () => {
     it("provides clear error for missing game", async () => {
       try {
-        await gameLoader.loadGame("tetris"); // Doesn't exist yet
+        await gameLoader.loadGame("nonexistent-game-xyz"); // Doesn't exist
         expect.fail("Should have thrown an error");
       } catch (error) {
-        expect(error.message).toContain("tetris");
+        expect(error.message).toContain("nonexistent-game-xyz");
         expect(
           error.message.toLowerCase().includes("not found") ||
             error.message.toLowerCase().includes("failed to load"),
@@ -128,8 +161,8 @@ describe("GameLoader - Integration Tests", () => {
     it("maintains clean state after load failure", async () => {
       // Set up initial game
       const GameClass = await gameLoader.loadGame("snake");
-      const mockCanvas = document.createElement("canvas");
-      const mockInput = { update: () => {} };
+      const mockCanvas = createMockCanvas();
+      const mockInput = { update: () => {}, isJustPressed: () => false };
       const mockAudio = { play: () => {} };
 
       const game1 = new GameClass(mockCanvas, mockInput, mockAudio);
@@ -155,15 +188,15 @@ describe("GameLoader - Integration Tests", () => {
     it("handles full game lifecycle: load -> init -> start -> pause -> resume -> destroy", async () => {
       // Load
       const GameClass = await gameLoader.loadGame("snake");
-      const mockCanvas = document.createElement("canvas");
-      const mockInput = { update: () => {} };
+      const mockCanvas = createMockCanvas();
+      const mockInput = { update: () => {}, isJustPressed: () => false };
       const mockAudio = { play: () => {} };
 
       // Instantiate
       const game = new GameClass(mockCanvas, mockInput, mockAudio);
       gameLoader.setCurrentGame(game);
 
-      expect(game.isRunning).toBe(false);
+      expect(game.state).toBe("idle");
 
       // Init
       await game.init();
@@ -171,15 +204,15 @@ describe("GameLoader - Integration Tests", () => {
 
       // Start
       game.start();
-      expect(game.isRunning).toBe(true);
+      expect(game.state).toBe("running");
 
       // Pause
       game.pause();
-      expect(game.isRunning).toBe(false);
+      expect(game.state).toBe("paused");
 
       // Resume
       game.resume();
-      expect(game.isRunning).toBe(true);
+      expect(game.state).toBe("running");
 
       // Destroy via unloadGame
       await gameLoader.unloadGame();

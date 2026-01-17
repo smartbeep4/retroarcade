@@ -89,7 +89,7 @@ export class GameLoader {
         }
       } catch (error) {
         // Log but don't throw - we want to ensure cleanup completes
-        // console.warn('Error during game cleanup:', error)
+        console.warn('Error during game cleanup:', error)
       }
     }
 
