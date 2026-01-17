@@ -68,6 +68,23 @@ const mouseState = {
 let swipeStart = null
 const SWIPE_THRESHOLD = 50 // pixels
 
+/**
+ * Convert client coordinates to canvas coordinates
+ * @param {HTMLCanvasElement} canvas - The canvas element
+ * @param {number} clientX - Client X coordinate
+ * @param {number} clientY - Client Y coordinate
+ * @returns {{x: number, y: number}} Canvas coordinates
+ */
+function clientToCanvasCoords(canvas, clientX, clientY) {
+  const rect = canvas.getBoundingClientRect()
+  const scaleX = canvas.width / rect.width
+  const scaleY = canvas.height / rect.height
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY,
+  }
+}
+
 // Event handlers (stored to allow cleanup)
 let keydownHandler = null
 let keyupHandler = null
@@ -250,14 +267,7 @@ function initSwipeDetection() {
         touchState.swipeCallbacks.forEach((cb) => cb(direction))
       } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
         // Register as tap if very small movement
-        // Convert to canvas coordinates
-        const rect = canvas.getBoundingClientRect()
-        const scaleX = canvas.width / rect.width
-        const scaleY = canvas.height / rect.height
-        touchState.lastTapPosition = {
-          x: (end.x - rect.left) * scaleX,
-          y: (end.y - rect.top) * scaleY,
-        }
+        touchState.lastTapPosition = clientToCanvasCoords(canvas, end.x, end.y)
         touchState.wasTapped = true
         touchState.tapCallbacks.forEach((cb) => cb({ x: end.x, y: end.y }))
       }
@@ -295,13 +305,7 @@ function initMouse() {
   mouseState.canvas = canvas
 
   const mouseMoveHandler = (e) => {
-    const rect = canvas.getBoundingClientRect()
-    const scaleX = canvas.width / rect.width
-    const scaleY = canvas.height / rect.height
-    mouseState.position = {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY,
-    }
+    mouseState.position = clientToCanvasCoords(canvas, e.clientX, e.clientY)
   }
 
   const mouseDownHandler = (e) => {
