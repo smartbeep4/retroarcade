@@ -80,11 +80,84 @@ class MainMenu {
       'roguelike',
     ]
     this.columns = 4
+    this.tileSize = 100
+    this.gap = 20
+  }
+
+  /**
+   * Get the tile layout parameters
+   */
+  getTileLayout(canvasWidth) {
+    const startX = (canvasWidth - this.columns * (this.tileSize + this.gap) + this.gap) / 2
+    const startY = 120
+    return { startX, startY, tileSize: this.tileSize, gap: this.gap }
+  }
+
+  /**
+   * Get the tile index at a given position, or -1 if none
+   */
+  getTileAtPosition(x, y, canvasWidth) {
+    const { startX, startY, tileSize, gap } = this.getTileLayout(canvasWidth)
+
+    // Check if position is within the tile grid bounds
+    if (x < startX || y < startY) return -1
+
+    const col = Math.floor((x - startX) / (tileSize + gap))
+    const row = Math.floor((y - startY) / (tileSize + gap))
+
+    // Check column and row bounds
+    if (col < 0 || col >= this.columns || row < 0) return -1
+
+    // Check if within a tile (not in the gap)
+    const tileX = startX + col * (tileSize + gap)
+    const tileY = startY + row * (tileSize + gap)
+    if (x > tileX + tileSize || y > tileY + tileSize) return -1
+
+    const index = row * this.columns + col
+    if (index >= this.games.length) return -1
+
+    return index
   }
 
   handleInput() {
     const input = this.shell.input
+    const canvasWidth = this.shell.canvas.width
 
+    // Handle mouse hover - select tile on hover
+    const mousePos = input.getMousePosition()
+    if (mousePos) {
+      const hoverIndex = this.getTileAtPosition(mousePos.x, mousePos.y, canvasWidth)
+      if (hoverIndex !== -1 && hoverIndex !== this.selectedIndex) {
+        this.selectedIndex = hoverIndex
+        this.shell.audio.play('menu-select')
+      }
+    }
+
+    // Handle mouse click - enter game
+    if (input.isMouseJustClicked()) {
+      if (mousePos) {
+        const clickIndex = this.getTileAtPosition(mousePos.x, mousePos.y, canvasWidth)
+        if (clickIndex !== -1) {
+          this.shell.audio.play('menu-confirm')
+          this.shell.loadGame(this.games[clickIndex])
+          return
+        }
+      }
+    }
+
+    // Handle touch tap - select and enter game
+    const tapPos = input.getTapPosition()
+    if (tapPos) {
+      const tapIndex = this.getTileAtPosition(tapPos.x, tapPos.y, canvasWidth)
+      if (tapIndex !== -1) {
+        this.selectedIndex = tapIndex
+        this.shell.audio.play('menu-confirm')
+        this.shell.loadGame(this.games[tapIndex])
+        return
+      }
+    }
+
+    // Keyboard controls
     if (input.isJustPressed('left')) {
       this.selectedIndex = Math.max(0, this.selectedIndex - 1)
       this.shell.audio.play('menu-select')
@@ -115,6 +188,7 @@ class MainMenu {
 
   render(ctx) {
     const { width, height } = ctx.canvas
+    const { startX, startY, tileSize, gap } = this.getTileLayout(width)
 
     // Background
     ctx.fillStyle = '#0a0a0f'
@@ -130,11 +204,6 @@ class MainMenu {
     ctx.shadowBlur = 0
 
     // Game tiles
-    const tileSize = 100
-    const gap = 20
-    const startX = (width - this.columns * (tileSize + gap) + gap) / 2
-    const startY = 120
-
     for (let i = 0; i < this.games.length; i++) {
       const col = i % this.columns
       const row = Math.floor(i / this.columns)
@@ -172,7 +241,7 @@ class MainMenu {
     ctx.font = '12px "Press Start 2P"'
     ctx.fillStyle = '#7f8c8d'
     ctx.textAlign = 'center'
-    ctx.fillText('PRESS ENTER TO START', width / 2, height - 40)
+    ctx.fillText('CLICK OR PRESS ENTER TO START', width / 2, height - 40)
   }
 
   getGameTitle(gameId) {
