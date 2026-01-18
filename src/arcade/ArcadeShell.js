@@ -421,12 +421,7 @@ class MainMenu {
 
         if (color) {
           ctx.fillStyle = color
-          ctx.fillRect(
-            startX + col * pixelSize,
-            startY + row * pixelSize,
-            pixelSize,
-            pixelSize
-          )
+          ctx.fillRect(startX + col * pixelSize, startY + row * pixelSize, pixelSize, pixelSize)
         }
       }
     }
