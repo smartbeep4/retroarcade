@@ -75,11 +75,16 @@ export class Tetris extends Game {
     // Grid settings
     this.cols = 10
     this.rows = 20
-    this.cellSize = 30
 
-    // Calculate positions
+    // Calculate cell size to fit within canvas height with margins
+    const topMargin = 20
+    const bottomMargin = 10
+    const availableHeight = this.canvas.height - topMargin - bottomMargin
+    this.cellSize = Math.floor(availableHeight / this.rows) // 28px for 600px canvas
+
+    // Calculate positions to center the grid
     this.gridOffsetX = (this.canvas.width - this.cols * this.cellSize) / 2
-    this.gridOffsetY = 50
+    this.gridOffsetY = topMargin
 
     // Timing
     this.baseDropInterval = 1000 // 1 second at level 1

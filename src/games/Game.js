@@ -123,8 +123,8 @@ export class Game {
     this.lastTime = currentTime
     this.accumulator += deltaTime
 
-    // Update input state
-    this.input.update()
+    // Note: Input state is updated by ArcadeShell.loop() - do not call input.update() here
+    // as it would clear the keysPressedSinceUpdate set before games can detect isJustPressed()
 
     // Check for pause
     if (this.input.isJustPressed('pause')) {

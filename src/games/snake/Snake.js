@@ -25,9 +25,10 @@ export class Snake extends Game {
   async init() {
     await super.init()
 
-    // Grid settings
-    this.gridSize = 20
-    this.cellSize = this.canvas.width / this.gridSize
+    // Grid settings - use separate dimensions for proper aspect ratio
+    this.cellSize = 40
+    this.gridWidth = Math.floor(this.canvas.width / this.cellSize) // 20 for 800px
+    this.gridHeight = Math.floor(this.canvas.height / this.cellSize) // 15 for 600px
 
     // Snake state
     this.snake = []
@@ -49,8 +50,8 @@ export class Snake extends Game {
 
   resetSnake() {
     // Start in center, 3 segments long
-    const startX = Math.floor(this.gridSize / 2)
-    const startY = Math.floor(this.gridSize / 2)
+    const startX = Math.floor(this.gridWidth / 2)
+    const startY = Math.floor(this.gridHeight / 2)
 
     this.snake = [
       { x: startX, y: startY },
@@ -66,8 +67,8 @@ export class Snake extends Game {
   spawnFood() {
     const emptyCells = []
 
-    for (let x = 0; x < this.gridSize; x++) {
-      for (let y = 0; y < this.gridSize; y++) {
+    for (let x = 0; x < this.gridWidth; x++) {
+      for (let y = 0; y < this.gridHeight; y++) {
         const isSnake = this.snake.some((s) => s.x === x && s.y === y)
         if (!isSnake) {
           emptyCells.push({ x, y })
@@ -111,10 +112,10 @@ export class Snake extends Game {
 
     // Handle walls
     if (this.wrapWalls) {
-      head.x = (head.x + this.gridSize) % this.gridSize
-      head.y = (head.y + this.gridSize) % this.gridSize
+      head.x = (head.x + this.gridWidth) % this.gridWidth
+      head.y = (head.y + this.gridHeight) % this.gridHeight
     } else {
-      if (head.x < 0 || head.x >= this.gridSize || head.y < 0 || head.y >= this.gridSize) {
+      if (head.x < 0 || head.x >= this.gridWidth || head.y < 0 || head.y >= this.gridHeight) {
         this.gameOver()
         return
       }
@@ -160,12 +161,17 @@ export class Snake extends Game {
     // Draw grid lines (subtle)
     ctx.strokeStyle = '#1a1a2e'
     ctx.lineWidth = 1
-    for (let i = 0; i <= this.gridSize; i++) {
+    // Vertical lines
+    for (let i = 0; i <= this.gridWidth; i++) {
       const pos = i * this.cellSize
       ctx.beginPath()
       ctx.moveTo(pos, 0)
       ctx.lineTo(pos, this.canvas.height)
       ctx.stroke()
+    }
+    // Horizontal lines
+    for (let i = 0; i <= this.gridHeight; i++) {
+      const pos = i * this.cellSize
       ctx.beginPath()
       ctx.moveTo(0, pos)
       ctx.lineTo(this.canvas.width, pos)
