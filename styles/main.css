@@ -55,7 +55,7 @@ body {
   background: var(--bg-cabinet);
   border: 4px solid var(--neon-cyan);
   box-shadow: var(--glow-cyan);
-  overflow: hidden;
+  overflow: visible;
 }
 
 #game-canvas {
@@ -66,6 +66,8 @@ body {
   height: 100%;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  /* Clip canvas content to container bounds */
+  clip-path: inset(0);
 }
 
 /* Pixel-perfect text sizes */
