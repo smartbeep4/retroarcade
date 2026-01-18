@@ -57,6 +57,145 @@ class NameEntry {
 }
 
 /**
+ * GameIcons - 8-bit pixel art icons for each game
+ * Each icon is an 8x8 grid where numbers represent color indices
+ */
+const GameIcons = {
+  // Color palette for icons
+  colors: {
+    0: null, // transparent
+    1: '#39ff14', // green (snake, frogger)
+    2: '#05d9e8', // cyan (pong, general)
+    3: '#ff2a6d', // pink/red (hearts, enemies)
+    4: '#f9f871', // yellow (pac-man, flappy)
+    5: '#9d4edd', // purple (tetris)
+    6: '#ff6b35', // orange (breakout, asteroids)
+    7: '#ffffff', // white
+    8: '#1a1a2e', // dark (eyes, details)
+  },
+
+  // Snake: coiled snake shape
+  snake: [
+    [0, 0, 1, 1, 1, 1, 0, 0],
+    [0, 1, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+
+  // Pong: two paddles and ball
+  pong: [
+    [0, 7, 0, 0, 0, 0, 7, 0],
+    [0, 7, 0, 0, 0, 0, 7, 0],
+    [0, 7, 0, 0, 0, 0, 7, 0],
+    [0, 7, 0, 2, 2, 0, 7, 0],
+    [0, 7, 0, 2, 2, 0, 7, 0],
+    [0, 7, 0, 0, 0, 0, 7, 0],
+    [0, 7, 0, 0, 0, 0, 7, 0],
+    [0, 7, 0, 0, 0, 0, 7, 0],
+  ],
+
+  // Breakout: bricks, ball, and paddle
+  breakout: [
+    [3, 3, 6, 6, 4, 4, 1, 1],
+    [3, 3, 6, 6, 4, 4, 1, 1],
+    [5, 5, 2, 2, 6, 6, 3, 3],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 7, 7, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 2, 2, 2, 2, 2, 2, 0],
+  ],
+
+  // Flappy: bird shape
+  flappy: [
+    [0, 0, 4, 4, 4, 0, 0, 0],
+    [0, 4, 4, 7, 8, 4, 0, 0],
+    [4, 4, 4, 4, 4, 4, 4, 0],
+    [4, 4, 4, 4, 4, 6, 6, 6],
+    [0, 4, 4, 4, 4, 4, 4, 0],
+    [0, 0, 4, 4, 4, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+
+  // Space Invaders: classic alien
+  'space-invaders': [
+    [0, 0, 1, 0, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 0, 1, 0, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1],
+    [1, 0, 1, 0, 0, 1, 0, 1],
+    [0, 0, 0, 1, 1, 0, 0, 0],
+  ],
+
+  // Frogger: frog shape
+  frogger: [
+    [0, 1, 1, 0, 0, 1, 1, 0],
+    [1, 7, 1, 1, 1, 1, 7, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+  ],
+
+  // Tetris: falling blocks
+  tetris: [
+    [0, 0, 2, 2, 0, 0, 0, 0],
+    [0, 0, 2, 2, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 6, 0, 0, 0, 0, 0],
+    [0, 6, 6, 6, 0, 5, 5, 0],
+    [3, 3, 0, 4, 4, 5, 5, 0],
+    [3, 3, 0, 4, 4, 1, 1, 1],
+    [2, 2, 2, 2, 4, 4, 1, 0],
+  ],
+
+  // Asteroids: ship and asteroids
+  asteroids: [
+    [0, 0, 0, 7, 0, 0, 0, 0],
+    [0, 0, 7, 7, 7, 0, 0, 0],
+    [0, 7, 0, 7, 0, 7, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 6, 6, 6, 0],
+    [6, 6, 0, 6, 0, 0, 6, 0],
+    [6, 6, 0, 6, 6, 6, 6, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+
+  // Pac-Man: pac-man eating dots
+  pacman: [
+    [0, 0, 4, 4, 4, 4, 0, 0],
+    [0, 4, 4, 4, 4, 4, 4, 0],
+    [4, 4, 4, 4, 4, 0, 0, 7],
+    [4, 4, 4, 4, 0, 0, 0, 0],
+    [4, 4, 4, 4, 4, 0, 0, 7],
+    [0, 4, 4, 4, 4, 4, 4, 0],
+    [0, 0, 4, 4, 4, 4, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 7],
+  ],
+
+  // Roguelike: sword and shield
+  roguelike: [
+    [0, 0, 0, 0, 0, 0, 7, 7],
+    [0, 0, 0, 0, 0, 7, 7, 0],
+    [0, 0, 0, 0, 7, 7, 0, 0],
+    [0, 6, 0, 7, 7, 0, 0, 0],
+    [0, 6, 7, 7, 0, 0, 0, 0],
+    [0, 6, 6, 0, 0, 0, 0, 0],
+    [0, 6, 0, 0, 0, 0, 0, 0],
+    [6, 0, 0, 0, 0, 0, 0, 0],
+  ],
+}
+
+/**
  * MainMenu - Main game selection screen
  */
 class MainMenu {
@@ -78,6 +217,7 @@ class MainMenu {
     this.columns = 4
     this.tileSize = 100
     this.gap = 20
+    this.iconPixelSize = 6 // Each pixel in the 8x8 icon will be 6x6 canvas pixels
   }
 
   /**
@@ -216,6 +356,10 @@ class MainMenu {
       ctx.strokeRect(x, y, tileSize, tileSize)
       ctx.shadowBlur = 0
 
+      // Draw 8-bit game icon (centered horizontally, positioned above the title)
+      const iconY = y + 15 // Start icon 15px from top of tile
+      this.drawGameIcon(ctx, this.games[i], x + tileSize / 2, iconY, isSelected)
+
       // Game title
       ctx.font = '10px "Press Start 2P"'
       ctx.fillStyle = isSelected ? '#05d9e8' : '#fff'
@@ -244,6 +388,50 @@ class MainMenu {
       roguelike: 'DUNGEON',
     }
     return titles[gameId] || gameId.toUpperCase()
+  }
+
+  /**
+   * Draw an 8-bit pixel art icon for a game
+   * @param {CanvasRenderingContext2D} ctx - Canvas context
+   * @param {string} gameId - Game identifier
+   * @param {number} x - X position (center of icon)
+   * @param {number} y - Y position (top of icon)
+   * @param {boolean} isSelected - Whether the tile is selected (for glow effect)
+   */
+  drawGameIcon(ctx, gameId, x, y, isSelected) {
+    const iconData = GameIcons[gameId]
+    if (!iconData) return
+
+    const pixelSize = this.iconPixelSize
+    const iconSize = 8 * pixelSize // 8x8 grid scaled up
+    const startX = x - iconSize / 2
+    const startY = y
+
+    // Add glow effect for selected tiles
+    if (isSelected) {
+      ctx.shadowColor = '#05d9e8'
+      ctx.shadowBlur = 8
+    }
+
+    // Draw each pixel of the icon
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const colorIndex = iconData[row][col]
+        const color = GameIcons.colors[colorIndex]
+
+        if (color) {
+          ctx.fillStyle = color
+          ctx.fillRect(
+            startX + col * pixelSize,
+            startY + row * pixelSize,
+            pixelSize,
+            pixelSize
+          )
+        }
+      }
+    }
+
+    ctx.shadowBlur = 0
   }
 }
 
