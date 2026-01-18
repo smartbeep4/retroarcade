@@ -9,7 +9,7 @@ export class Snake extends Game {
     return {
       id: 'snake',
       title: 'Snake',
-      description: "Eat food, grow longer, don't hit yourself!",
+      description: 'Eat food, grow longer, don\'t hit yourself!',
       thumbnail: '/assets/sprites/snake-thumb.png',
       startLives: 1,
       highScoreType: 'highest',
