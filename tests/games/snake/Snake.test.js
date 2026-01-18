@@ -60,8 +60,9 @@ describe('Snake', () => {
       expect(game.direction).toEqual({ x: 1, y: 0 })
     })
 
-    it('initializes grid size to 20', () => {
-      expect(game.gridSize).toBe(20)
+    it('initializes grid dimensions correctly', () => {
+      expect(game.gridWidth).toBe(20) // 800px / 40px cellSize
+      expect(game.gridHeight).toBe(20) // 800px / 40px cellSize
     })
 
     it('calculates cell size correctly', () => {
@@ -81,15 +82,15 @@ describe('Snake', () => {
     })
 
     it('snake starts in center of grid', () => {
-      const centerX = Math.floor(game.gridSize / 2)
-      const centerY = Math.floor(game.gridSize / 2)
+      const centerX = Math.floor(game.gridWidth / 2)
+      const centerY = Math.floor(game.gridHeight / 2)
       expect(game.snake[0].x).toBe(centerX)
       expect(game.snake[0].y).toBe(centerY)
     })
 
     it('snake has correct initial positions', () => {
-      const centerX = Math.floor(game.gridSize / 2)
-      const centerY = Math.floor(game.gridSize / 2)
+      const centerX = Math.floor(game.gridWidth / 2)
+      const centerY = Math.floor(game.gridHeight / 2)
       expect(game.snake).toEqual([
         { x: centerX, y: centerY },
         { x: centerX - 1, y: centerY },
@@ -356,9 +357,9 @@ describe('Snake', () => {
     it('food coordinates are within grid bounds', () => {
       game.spawnFood()
       expect(game.food.x).toBeGreaterThanOrEqual(0)
-      expect(game.food.x).toBeLessThan(game.gridSize)
+      expect(game.food.x).toBeLessThan(game.gridWidth)
       expect(game.food.y).toBeGreaterThanOrEqual(0)
-      expect(game.food.y).toBeLessThan(game.gridSize)
+      expect(game.food.y).toBeLessThan(game.gridHeight)
     })
   })
 

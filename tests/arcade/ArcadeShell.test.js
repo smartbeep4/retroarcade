@@ -69,6 +69,7 @@ vi.mock('../../src/arcade/TouchControls.js', () => ({
     init: vi.fn(),
     configureForGame: vi.fn(),
     hide: vi.fn(),
+    hideAll: vi.fn(),
   },
 }))
 

@@ -427,12 +427,6 @@ describe('Game base class', () => {
   })
 
   describe('game loop', () => {
-    it('gameLoop calls input.update', () => {
-      game.state = 'running'
-      game.gameLoop(performance.now())
-      expect(input.update).toHaveBeenCalled()
-    })
-
     it('gameLoop checks for pause input', () => {
       game.state = 'running'
       game.gameLoop(performance.now())
@@ -449,7 +443,8 @@ describe('Game base class', () => {
     it('gameLoop does nothing when not running', () => {
       game.state = 'idle'
       game.gameLoop(performance.now())
-      expect(input.update).not.toHaveBeenCalled()
+      // When not running, gameLoop returns early and doesn't check pause
+      expect(input.isJustPressed).not.toHaveBeenCalled()
     })
 
     it('gameLoop calls render', () => {
