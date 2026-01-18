@@ -101,6 +101,7 @@ class TouchControlsManager {
   constructor() {
     this.container = null
     this.pauseButton = null
+    this.toggleButton = null
     this.elements = {}
     this.isVisible = false
     this.currentConfig = null
@@ -112,6 +113,7 @@ class TouchControlsManager {
     }
     this.swipeCallbacks = []
     this.fullScreenTapEnabled = false
+    this.controlsEnabled = false // Controls are off by default
   }
 
   /**
@@ -131,6 +133,9 @@ class TouchControlsManager {
 
     // Create pause button (always present)
     this.createPauseButton(parentContainer)
+
+    // Create toggle button for showing/hiding controls
+    this.createToggleButton(parentContainer)
 
     // Check if touch device
     this.isTouchDevice = this.detectTouchDevice()
@@ -166,6 +171,45 @@ class TouchControlsManager {
   }
 
   /**
+   * Create the toggle button for showing/hiding controls
+   */
+  createToggleButton(parent) {
+    this.toggleButton = document.createElement('button')
+    this.toggleButton.id = 'touch-toggle'
+    this.toggleButton.className = 'touch-toggle'
+    this.toggleButton.textContent = '🎮'
+    this.toggleButton.setAttribute('aria-label', 'Toggle touch controls')
+
+    this.toggleButton.addEventListener('touchstart', (e) => {
+      e.preventDefault()
+      this.toggleControls()
+    })
+
+    this.toggleButton.addEventListener('click', (e) => {
+      e.preventDefault()
+      this.toggleControls()
+    })
+
+    parent.appendChild(this.toggleButton)
+  }
+
+  /**
+   * Toggle controls visibility
+   */
+  toggleControls() {
+    this.controlsEnabled = !this.controlsEnabled
+    if (this.controlsEnabled) {
+      this.show()
+    } else {
+      this.hide()
+    }
+    // Update toggle button appearance
+    if (this.toggleButton) {
+      this.toggleButton.classList.toggle('controls-on', this.controlsEnabled)
+    }
+  }
+
+  /**
    * Configure controls for a specific game
    * @param {string} gameId - Game identifier
    */
@@ -180,8 +224,13 @@ class TouchControlsManager {
     // Build new controls based on config
     this.buildControls(config)
 
-    // Show controls on touch devices
-    if (this.isTouchDevice) {
+    // Show toggle button (controls are off by default)
+    if (this.toggleButton) {
+      this.toggleButton.classList.add('active')
+    }
+
+    // Only show controls if user has previously enabled them
+    if (this.controlsEnabled) {
       this.show()
     }
   }
@@ -425,6 +474,21 @@ class TouchControlsManager {
     this.container.classList.remove('active')
     if (this.pauseButton) {
       this.pauseButton.classList.remove('active')
+    }
+    // Update toggle button to show controls are off
+    if (this.toggleButton) {
+      this.toggleButton.classList.remove('controls-on')
+    }
+  }
+
+  /**
+   * Hide all controls including toggle button (for menu)
+   */
+  hideAll() {
+    this.hide()
+    this.controlsEnabled = false
+    if (this.toggleButton) {
+      this.toggleButton.classList.remove('active')
     }
   }
 

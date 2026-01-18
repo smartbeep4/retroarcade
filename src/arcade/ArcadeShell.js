@@ -815,8 +815,8 @@ export class ArcadeShell {
       this.currentGame = null
       this.currentGameId = null
     }
-    // Hide touch controls when returning to menu
-    TouchControls.hide()
+    // Hide all touch controls when returning to menu
+    TouchControls.hideAll()
     GameLoader.unloadGame()
   }
 

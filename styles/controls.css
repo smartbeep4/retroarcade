@@ -154,6 +154,45 @@
   display: flex;
 }
 
+/* Toggle Controls Button */
+.touch-toggle {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(26, 26, 46, 0.7);
+  border: 2px solid var(--neon-purple);
+  color: var(--neon-purple);
+  font-size: 20px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 52;
+  touch-action: manipulation;
+  transition: all 0.2s ease;
+}
+
+.touch-toggle.active {
+  display: flex;
+}
+
+.touch-toggle.controls-on {
+  background: var(--neon-purple);
+  border-color: var(--neon-purple);
+  color: var(--bg-dark);
+  box-shadow: 0 0 15px var(--neon-purple);
+}
+
+.touch-toggle:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
 .touch-pause:active {
   background: var(--neon-yellow);
   color: var(--bg-dark);
@@ -255,6 +294,12 @@
     font-size: 10px;
   }
 
+  .touch-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
   .touch-hint {
     bottom: 140px;
     font-size: 8px;
@@ -290,6 +335,12 @@
     width: 50px;
     height: 50px;
     font-size: 10px;
+  }
+
+  .touch-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
   }
 
   .touch-hint {
